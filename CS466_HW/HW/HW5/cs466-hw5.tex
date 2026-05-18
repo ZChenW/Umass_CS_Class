@@ -1,0 +1,282 @@
+\documentclass[11pt]{article}
+\usepackage{xspace,mathrsfs}
+\usepackage{graphicx,rotating}
+\usepackage{url}
+\usepackage{amscd,amsfonts,amsmath,amssymb}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{multirow,setspace}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{fancyhdr}
+
+\def\shownotes{0}   % set 1 for version with author notes
+                    % set 0 for no notes
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Some macros (you can ignore everything until "end of macros")
+\topmargin 0pt \advance \topmargin by -\headheight \advance
+\topmargin by -\headsep
+
+\textheight 8.9in
+\oddsidemargin 0pt \evensidemargin \oddsidemargin \marginparwidth
+0.5in
+
+\textwidth 6.5in
+
+%%%%%%
+\DeclareMathAlphabet{\mathsl}{OT1}{cmr}{m}{sl}
+\DeclareMathAlphabet{\mathsc}{OT1}{cmr}{m}{sc}
+\DeclareMathAlphabet{\mathslbf}{OT1}{cmr}{bx}{sl}
+
+\newcommand{\procfont}[1]{\mathsc{#1}}
+\newcommand{\algfont}[1]{{\mathsf{#1}}}
+\newcommand{\schemefont}[1]{{\mathsf{#1}}}
+
+\newcommand{\gamefont}[1]{\mathrm{#1}}
+\newcommand{\getsr}{{{\,\leftarrow{\hspace*{-3pt}\raisebox{.75pt}{$\scriptscriptstyle\$$}}\,}}}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\Adv}{\mathbf{Adv}}
+\newcommand{\AdvGen}[3]{\mathbf{Adv}^{\mathrm{#1}}_{#2}(#3)}
+\newcommand{\Prob}[1]{{\Pr\left[\,{#1}\,\right]}}
+\newcommand{\main}{\procfont{Game}}
+\newcommand{\gameName}[1]{\underline{$\main$ #1} \\[2pt]}
+\newcommand{\return}{\textrm{Ret}~}
+
+\newcommand{\gamesfontsize}{\small}
+\renewcommand{\captionfont}{}
+\newcommand{\indd}{\hspace*{12pt}}
+
+\newcommand{\mpage}[2]{\begin{minipage}{#1\textwidth} #2 \end{minipage}}
+\newcommand{\fpage}[2]{\framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize  #2 \end{minipage}}}
+\newcommand{\hfpages}[3]{\hfpagess{#1}{#1}{#2}{#3}}
+\newcommand{\hfpagess}[4]{
+        \begin{tabular}{c@{\hspace*{.5em}}c}
+        \framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize #3 \end{minipage}}
+        &
+        \framebox{\begin{minipage}[t]{#2\textwidth}\setstretch{1.2}\gamesfontsize #4 \end{minipage}}
+        \end{tabular}
+    }
+
+\newcommand{\Initialize}{\procfont{Initialize}}
+\newcommand{\Finalize}{\procfont{Finalize}}
+\newcommand{\InitializeCode}{\underline{\textrm{proc} $\Initialize$}\\[2pt]}
+\newcommand{\FinalizeCode}[1]{\underline{\textrm{proc} $\Finalize(#1)$}\\[2pt]}
+
+\newcommand{\calK}{{\cal K}}
+\newcommand{\calM}{{\cal M}}
+
+%%%%%%%  Author Notes %%%%%%%
+\ifnum\shownotes=1
+\newcommand{\authnote}[2]{{ $\ll$\textsf{\footnotesize #2}$\gg$}}
+\else
+\newcommand{\authnote}[2]{}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% end of macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{COMPSCI 466: Homework 5}
+\date{}
+
+\usepackage{lastpage}
+\pagestyle{fancy}
+\lhead{\footnotesize \parbox{11cm}{COMPSCI 466, UMass Amherst, Spring 2026} }
+\rhead{\footnotesize Instructor:  Adam O'Neill \\ \url{adamo@cs.umass.edu}}
+\renewcommand{\headheight}{24pt}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\noindent Due April 8, 11:59pm.
+
+
+\paragraph*{Problem 1.} (100 points.)
+Let $D$ be the set of all strings whose length is a positive multiple of~$128$.
+Define keyed hash function $H \colon \bits^{128} \times D \to \bits^{128}$
+as follows for all $K \in \bits^{128}$ and $M \in D$:
+
+\begin{center}
+\begin{minipage}{1.5in}
+\begin{tabbing}
+123\=123\=123\=123\=123\=\kill
+\textbf{Algorithm} $H_K(M)$: \\
+\> Parse $M$ as $M[1] \| M[2] \| \cdots \| M[m]$ \\
+\> $C[0] \gets 0^{128}$ \\
+\> For $i = 1$ to $m$ do: \\
+\>\> $B[i] \gets \mathsf{AES}_K\!\bigl(C[i-1] \oplus M[i]\bigr)$ \\
+\>\> $C[i] \gets \mathsf{AES}_K\!\bigl(B[i]   \oplus M[i]\bigr)$ \\
+\> Return $C[m]$
+\end{tabbing}
+\end{minipage}
+\end{center}
+
+\noindent
+Above, $M$ is parsed as $m$ blocks of 128 bits each, the initial
+chaining value is $C[0] = 0^{128}$, and each round applies
+$\mathsf{AES}_K$ twice: first to $C[i-1] \oplus M[i]$ to produce $B[i]$,
+then to $B[i] \oplus M[i]$ to produce the next chaining value $C[i]$.
+The hash output is the final chaining value $C[m]$.
+
+\medskip
+
+\noindent (Part A --- 50 points.)
+Show that $H$ is \emph{not} collision-resistant.
+State your adversary $A$ in pseudocode.
+Then provide a complete justification: trace through the full computation
+of $H_K$ on both messages to verify they produce the same output,
+explain why the two messages are distinct.
+Analyze $\mathbf{Adv}^{\mathrm{cr}}_H(A)$  and
+state the resource usage of $A$.
+
+\begin{algorithm}[H]
+\caption{$A_H$}
+K is given\\
+M_1 \leftarrow 0^{128}\\
+c \leftarrow H_K(M_1)\\
+M_2 \leftarrow M_1 \| (c \oplus AES_K^{-1}(c))\\
+\Return (M_1, M_2)
+\end{algorithm}
+
+\\
+
+\noindent\textbf{Output:}
+
+\[M_1 = 0^{128}\]
+\[H_K(M_1) = AES_K(AES_K(C[0] \oplus 0^{128}) \oplus 0^{128}) = AES_K(AES_K(0^{128})) = c\]
+
+\[M_2 = M_1 \| (c \oplus AES_K^{-1}(c))\]
+\[H_K(M_2)\]
+
+When $i=1$:
+\[B[1] = AES_K(C[0] \oplus M_1) = AES_K(0^{128})\]
+\[C[1] = AES_K(B[1] \oplus 0^{128}) = AES_K(AES_K(0^{128})) = c\]
+
+When $i=2$:
+\[B[2] = AES_K(C[1] \oplus c \oplus AES_K^{-1}(c)) = AES_K(AES_K^{-1}(c)) = c\]
+\[C[2] = AES_K(B[2] \oplus c \oplus AES_K^{-1}(c)) = AES_K(AES_K^{-1}(c)) =  c\]
+
+\[H_K(M_1) = c = c = H_K(M_2)\]
+
+\noindent \textbf{Distinct}:
+
+\[M_1 = 0^{128}\] 
+
+\[M_2 = 0^{128} \| (H_K(M_1) \oplus AES_K^{-1}(H_K(M_1)))\]
+
+$M_1$ has one block, while $M_2$ has two blocks.
+
+\noindent \textbf{Advantage}:
+\[Adv_H^{cr}(A) = 1\]
+
+\[H_K(M_1) = c = c =H_K(M_2)\]
+
+where c = $AES_K(AES_K(0^{128}))$
+
+\noindent \textbf{Resource usage}:
+
+1-query $H_K$ + 1 evaluation $AES_K^{-1}$ + $O(1)$
+
+
+\newpage
+
+\medskip
+
+\noindent (Part B --- 50 points.)
+We say that $H$ is \emph{second-preimage resistant (SPR)} with respect to
+the following game $\mathrm{SPR}^A_H$.
+
+\begin{center}
+\fpage{0.52}{
+\begin{tabbing}
+123\=123\=\kill
+\InitializeCode
+\> $K \getsr \bits^{128}$ \\
+\> $M_1 \getsr \bits^{128}$ \\
+\> \return $(K,\, M_1)$ \\[6pt]
+\FinalizeCode{M_2}
+\> \return $(M_2 \in D) \;\wedge\; (M_2 \neq M_1) \;\wedge\; \bigl(H_K(M_2) = H_K(M_1)\bigr)$
+\end{tabbing}
+}
+\end{center}
+
+\noindent
+The adversary $A$ receives the output of $\Initialize$ and passes
+its response to $\Finalize$.
+We define
+$\mathbf{Adv}^{\mathrm{spr}}_H(A) = \Pr\bigl[\mathrm{SPR}^A_H \Rightarrow 1\bigr]$,
+where the probability is over the coins of $\Initialize$ and
+any randomness of $A$.
+We say $H$ is SPR if $\mathbf{Adv}^{\mathrm{spr}}_H(A)$ is negligible for
+all efficient adversaries $A$.
+
+\medskip\noindent
+Show that $H$ is \emph{not} SPR.
+State your adversary $A$ in pseudocode.
+Prove that $H_K(M_2) = H_K(M_1)$ for your choice of $M_2$, tracing
+through the full computation of $H_K$ on both inputs.
+Argue that $M_2 \neq M_1$ and that $M_2 \in D$.
+Finally, analyze $\mathbf{Adv}^{\mathrm{spr}}_H(A)$ and state the resource usage of $A$.
+
+
+\begin{algorithm}[H]
+\caption{$A_H$}
+K is given\\
+$M_1$ is given\\
+c \leftarrow H_K(M_1)\\
+M_2 \leftarrow M_1 \| (c \oplus AES_K^{-1}(c))\\
+\Return (M_2)
+\end{algorithm}
+
+\\
+
+\noindent\textbf{Output:}
+
+\[M_1 \text{ is given}\]
+\[H_K(M_1) = AES_K(AES_K(C[0] \oplus M_1) \oplus M_1) = AES_K(AES_K(M_1) \oplus M_1) = c\]
+
+\[M_2 = M_1 \| (c \oplus AES_K^{-1}(c))\]
+\[|M_1| = 128 \quad |c \oplus AES_K^{-1}(c)| = 128 \quad |M_2| = 256 \quad M_2 \in D\]
+\[H_K(M_2)\]
+
+When $i=1$:
+\[B[1] = AES_K(C[0] \oplus M_1) = AES_K(M_1)\]
+\[C[1] = AES_K(B[1] \oplus M_1) = AES_K(AES_K(M_1) \oplus M_1) = c\]
+
+When $i=2$:
+\[B[2] = AES_K(C[1] \oplus c \oplus AES_K^{-1}(c)) = AES_K(AES_K^{-1}(c)) = c\]
+\[C[2] = AES_K(B[2] \oplus c \oplus AES_K^{-1}(c)) = AES_K(AES_K^{-1}(c)) =  c\]
+
+\[H_K(M_1) = c = c = H_K(M_2)\]
+
+\noindent \textbf{Distinct}:
+
+\[M_1 \leftarrow \{0,1\}^{128}\] 
+
+\[M_2 = M_1 \| (H_K(M_1) \oplus AES_K^{-1}(H_K(M_1)))\]
+
+$M_1$ has one block, while $M_2$ has two blocks.
+
+\noindent \textbf{Advantage}:
+\[Adv_H^{spr}(A) = 1\]
+
+\[H_K(M_1) = c = c =H_K(M_2)\]
+
+where c = $AES_K(AES_K(M_1) \oplus M_1)$
+
+\noindent \textbf{Resource usage}:
+
+1-query $H_K$ + 1 evaluation $AES_K^{-1}$ + $O(1)$
+
+
+
+
+\end{document}

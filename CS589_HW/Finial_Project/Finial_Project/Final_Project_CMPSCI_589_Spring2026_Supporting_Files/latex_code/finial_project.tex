@@ -1,0 +1,961 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[table]{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{pgfplotstable}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{graphicx}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    columns=fullflexible,
+    keepspaces=true
+}
+
+\title{COMPSCI 589 - Final Project - Spring 2026}
+\date{Due May 8, 11:55 pm Eastern Time}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Datasets}
+
+
+\subsection{The Hand-Written Digits Recognition Dataset}
+
+The goal here is to analyze $8 \times 8$ pictures of hand-written digits and classify them as belonging to one of 10 possible classes. Each class is associated with one particular digit: $0, 1, \ldots, 9$. In this dataset, each instance consists of $8 \times 8 = 64$ numerical attributes. Each attribute represents the grayscale value of a single pixel in the image being classified. This dataset contains 1797 instances.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.75\textwidth}{\centering Image omitted.}}
+    \caption{Examples of hand-written digits that you will be classifying.}
+\end{figure}
+
+To access this dataset, and for sample code describing how to load and pre-process it, please visit Scikit-learn's website. Further, below is a simple example of how to load this dataset; here, the instances are saved in \texttt{digits\_dataset\_X} and their corresponding classes are saved in \texttt{digits\_dataset\_y}.
+
+\begin{lstlisting}[language=Python, caption={Example showing how to load the Digits dataset from Scikit-learn and how to display information about a random digit from the dataset.}]
+from sklearn import datasets
+import numpy as np
+import matplotlib.pyplot as plt
+
+digits = datasets.load_digits(return_X_y=True)
+digits_dataset_X = digits[0]
+digits_dataset_y = digits[1]
+N = len(digits_dataset_X)
+
+# Prints the 64 attributes of a random digit, its class,
+# and then shows the digit on the screen
+digit_to_show = np.random.choice(range(N), 1)[0]
+print("Attributes:", digits_dataset_X[digit_to_show])
+print("Class:", digits_dataset_y[digit_to_show])
+
+plt.imshow(np.reshape(digits_dataset_X[digit_to_show], (8, 8)))
+plt.show()
+\end{lstlisting}
+
+\noindent \subsection*{Result:}
+
+\noindent \textbf{Chosen Algorithm (3):}
+\begin{itemize}
+    \item KNN
+    \item Random Forest
+    \item Backpropagation Algorithm
+\end{itemize}
+
+\noindent \text{Reason choose these algorithms:}
+
+\noindent In this dataset, each sample contains $8 \times 8 = 64$ numerical features. KNN was chosen because images of the same digit typically have similar pixel patterns. Random Forest was selected because it is also capable of capturing relationships between pixels. The backpropagation algorithm was chosen because neural networks are well-suited for processing image-based numerical inputs and are suitable for classifying the ten digits.\\
+
+\noindent Implementation: ZiChen algorithm (stratified 10-fold cross-validation)\\
+
+\noindent \textbf{1) KNN:}
+\begin{itemize}
+    \item Hyperparameters : K neighbors
+    \item Best Hyperparameter: k = 3
+    \item Best Accuracy: 0.988309
+    \item Best F1-Score: 0.988315
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./mnist/mnist_knn.png}
+        \caption{KNN Hyperparameters for MNIST dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../mnist/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/mnist_k10/mnist_10_knn_acc.png}
+        \caption{KNN Accuracy for MNIST dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../mnist/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/mnist_k10/mnist_10_knn_f1.png}
+        \caption{KNN F1-Score for MNIST dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{2) Random Forests:}
+\begin{itemize}
+    \item Hyperparameters: ntree, max depths, min splits
+    \item Best Hyperparameter: ntree = 50, max depth = 8, min split = 2
+    \item Best Accuracy: 0.9717
+    \item Best F1-Score: 0.9716
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./mnist/mnist_random_forest.png}
+        \caption{Random Forest Hyperparameters for MNIST dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../mnist/HW3/HW3_CMPSCI_589_Spring2026_Supporting_Files/picture/mnist_k10_depth8_minsplit2/mnist_10_depth_8_minsplit2_acc.png}
+        \caption{Random Forests Accuracy for MNIST dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../mnist/HW3/HW3_CMPSCI_589_Spring2026_Supporting_Files/picture/mnist_k10_depth8_minsplit2/mnist_10_depth_8_minsplit2_f1.png}
+        \caption{RandOM Forests F1-Score for MNIST dataset.} \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{3) Backpropagation Algorithm:}
+\begin{itemize}
+    \item Hyperparameters: Architecture, $\lambda$
+\item Best Hyperparameter: Architecture = [64, 32, 10], $\lambda$ = 0.30
+    \item Best Accuracy: 0.9739
+    \item Best F1-Score: 0.9740
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./mnist/mnist_nn.png}
+        \caption{Backpropagation Hyperparameters for MNIST dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../mnist/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/digits_nn_acc.png}
+        \caption{Backpropagation Accuracy for MNIST dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../mnist/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/digits_nn_f1.png}
+        \caption{Backpropagation F1-Score for MNIST dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+
+\paragraph{Interpret Graph: }
+\noindent On the Digits dataset, KNN performed best among the algorithms. The KNN curve shows that smaller values of $k$ perform better, with $k=3$ yielding the best results. As $k$ increases, both accuracy and F1 score decline slightly, indicating that using too many neighbors can over-smooth the decision boundary. Random Forests also performed strongly, with performance increasing as the number of trees increased, however, after reaching a certain threshold, the improvement became negligible. Backpropagation performed well, however, its performance is more dependent on architecture and training parameters, so it performed slightly worse than KNN on this dataset.
+
+\newpage
+
+\subsection{The Oxford Parkinson's Disease Detection Dataset}
+
+This dataset is composed of a range of biomedical voice measurements from 31 people, 23 of whom are patients with Parkinson's disease. Each row in the dataset corresponds to the voice recording of one of these individuals. Each attribute corresponds to the measurement of a specific property of the patient's voice---for example, their average vocal frequency or several measures of frequency variation. The goal here is to predict whether a particular person is healthy or has Parkinson's. The binary target class to be predicted is Diagnosis: whether the patient is healthy, class 0, or a patient with Parkinson's, class 1. There are 195 instances in this dataset. All 22 attributes are numerical. The Parkinson's dataset can be found in this assignment's zip file on Canvas.
+
+\noindent \subsection*{Result:}
+
+\noindent \textbf{Chosen Algorithm (3):}
+\begin{itemize}
+    \item KNN
+    \item Random Forest
+    \item Backpropagation Algorithm
+\end{itemize}
+
+
+\noindent \text{Reason choose these algorithms:}
+
+\noindent This dataset contains only numerical features. KNN was chosen because patients with similar voice measurements may have similar diagnostic labels. Random Forest was selected because it is also capable of capturing relationships among voice features. The backpropagation algorithm was used to evaluate whether the neural network could learn a better decision boundary from the 22 numerical attributes, although this dataset is small and prone to overfitting.\\
+
+\noindent Implementation: ZiChen algorithm (stratified 10-fold cross-validation)\\
+
+\noindent \textbf{1) KNN:}
+\begin{itemize}
+    \item Hyperparameters : K neighbors
+    \item Best Hyperparameter: k = 1
+    \item Best Accuracy: 0.9595
+    \item Best F1-Score: 0.9728
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./park/park_knn.png}
+        \caption{KNN Hyperparameters for Parkinson dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../parkinson/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinsons_k10/parkinsons_10_knn_acc.png}
+        \caption{KNN Accuracy for Parkinson dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../parkinson/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinsons_k10/parkinsons_10_knn_f1.png}
+        \caption{KNN F1-Score for Parkinson dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{2) Random Forests:}
+\begin{itemize}
+    \item Hyperparameters: ntree, max depths, min splits
+    \item Best Hyperparameter: ntree = 50, max depth = 10, min split = 2
+    \item Best Accuracy: 0.9334
+    \item Best F1-Score: 0.9574
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./park/park_random_forest.png}
+        \caption{Random Forest Hyperparameters for Parkinson dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../parkinson/HW3/HW3_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinsons_k10_depth10_minsplit2/parkinsons_10_depth_10_minsplit2_acc.png}
+        \caption{Random Forests Accuracy for Parkinson dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../parkinson/HW3/HW3_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinsons_k10_depth10_minsplit2/parkinsons_10_depth_10_minsplit2_f1.png}
+        \caption{RandOM Forests F1-Score for Parkinson dataset.} \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{3) Backpropagation Algorithm:}
+\begin{itemize}
+    \item Hyperparameters: Architecture, $\lambda$
+    \item Best Hyperparameter: Architecture = [22, 8, 4, 1], $\lambda$ = 0.3
+    \item Best Accuracy: 0.8511
+    \item Best F1-Score: 0.9055
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./park/park_nn.png}
+        \caption{Backpropagation Hyperparameters for Parkinson dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../parkinson/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinsons_nn_acc.png}
+        \caption{Backpropagation Accuracy for Parkinson dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../parkinson/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinsons_nn_f1.png}
+        \caption{Backpropagation F1-Score for Parkinson dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\paragraph{Interpret Graph:} On the Parkinson disease dataset, KNN performed best among the algorithms tested. The KNN curve shows that smaller values of $k$ perform better, with $k=1$ yielding the best results. This suggests that using too many neighbors can over-smooth the decision boundary. Random Forests also performed strongly; results generally improved as the number of trees increased, but the improvement became negligible after reaching a certain threshold. Backpropagation performed well; however, its performance is more dependent on architecture and training parameters, so it performed slightly worse than KNN on this dataset.
+
+\newpage
+
+\subsection{The Rice Grains Dataset}
+
+This dataset contains information about 3810 rice grain images. In particular, each rice grain instance is described by 7 numerical morphological features inferred from images of different rice grains, e.g., the longest line that can be drawn on the rice grain. The goal is to predict whether a given rice grain belongs to the Cammeo species or the Osmancik species. This dataset can be found in this assignment's zip file on Canvas.
+
+
+\noindent \subsection*{Result:}
+
+\noindent \textbf{Chosen Algorithm (3):}
+\begin{itemize}
+    \item KNN
+    \item Random Forest
+    \item Backpropagation Algorithm
+\end{itemize}
+
+\noindent \text{Reason choose these algorithms:}
+
+\noindent This dataset contains numerical features. KNN was chosen because the shape measurements of rice grains of the same variety are expected to be similar. Random Forest was selected because it can capture the relationships among the seven morphological features. The backpropagation algorithm was included to test whether the neural network can learn a more complex decision boundary between the Cammeo and Osmancik categories. This dataset contains only numerical features.\\
+
+\noindent Implementation: ZiChen algorithm (stratified 10-fold cross-validation)\\
+
+\noindent \textbf{1) KNN:}
+\begin{itemize}
+    \item Hyperparameters : K neighbors
+    \item Best Hyperparameter: k = 11
+    \item Best Accuracy: 0.9228
+    \item Best F1-Score: 0.9094
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./rice/rice_knn.png}
+        \caption{KNN Hyperparameters for Rice dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../rice/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/rice_k10/rice_10_knn_acc.png}
+        \caption{KNN Accuracy for Rice dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../rice/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/rice_k10/rice_10_knn_f1.png}
+        \caption{KNN F1-Score for Rice dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{2) Random Forests:}
+\begin{itemize}
+    \item Hyperparameters: ntree, max depths, min splits
+    \item Best Hyperparameter: ntree = 50, max depth = 8, min split = 2
+    \item Best Accuracy: 0.9276
+    \item Best F1-Score: 0.9148
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./rice/rice_random_forest.png}
+        \caption{Random Forests Hyperparameters for Rice dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../rice/HW3/HW3_CMPSCI_589_Spring2026_Supporting_Files/picture/rice_k10_depth8_minsplit2/rice_10_depth_8_minsplit2_acc.png}
+        \caption{Random Forests Accuracy for Rice dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../rice/HW3/HW3_CMPSCI_589_Spring2026_Supporting_Files/picture/rice_k10_depth8_minsplit2/rice_10_depth_8_minsplit2_f1.png}
+        \caption{RandOM Forests F1-Score for Rice dataset.} \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{3) Backpropagation Algorithm:}
+\begin{itemize}
+    \item Hyperparameters: Architecture, $\lambda$
+    \item Best Hyperparameter: Architecture = [7, 16, 1], $\lambda$ = 0.3
+    \item Best Accuracy: 0.9286
+    \item Best F1-Score: 0.9166
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./rice/rice_nn.png}
+        \caption{Backpropagation Hyperparameters for Rice dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../rice/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/rice_nn_acc.png}
+        \caption{Backpropagation Accuracy for Rice dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../rice/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/rice_nn_f1.png}
+        \caption{Backpropagation F1-Score for Rice dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\paragraph{Interpret Graph:} For the rice dataset, the backpropagation algorithm achieved the highest accuracy and F1 score, while the random forest algorithm performed very similarly. This dataset contains 3,810 samples and only 7 numerical morphological features, making it highly suitable for neural networks. The performance curve for the Random Forest algorithm indicates that increasing the number of trees initially improves performance, but when the ensemble size becomes sufficiently large, performance actually decreases. The backpropagation curve shows that the neural network is highly capable of learning useful nonlinear relationships between morphological features and rice species. KNN also performed quite well, though slightly worse than the other two algorithms.
+
+\newpage
+
+\subsection{The Credit Approval Dataset}
+
+This dataset contains information about 653 credit card applications. The attribute names and their values were converted from their original form to a format that is not easily interpretable by humans, in order to protect the confidentiality of the data. That said, they still contain all the necessary information to train effective classifiers. The goal is to predict whether a given credit card application will be approved. Each credit card application is described by 6 numerical features and 9 categorical features. This dataset can be found in this assignment's zip file on Canvas.
+
+\noindent \subsection*{Result:}
+
+\noindent \textbf{Chosen Algorithm (3):}
+\begin{itemize}
+    \item Decision Tree
+    \item Random Forest
+    \item Backpropagation Algorithm
+\end{itemize}
+
+\noindent \text{Reason choose these algorithms}
+
+\noindent This dataset contains both numerical and categorical features, and the task is a binary classification problem. Decision trees were chosen because they are well-suited for tabular data and can learn effective decision rules after converting categorical features using one-hot encoding. Random Forests were chosen because they improve decision stability and reduce overfitting by combining multiple decision trees. Backpropagation was used to evaluate whether a neural network could learn a better decision boundary from the encoded features, although the dataset is relatively small and prone to overfitting.\\
+
+\noindent Implementation: ZiChen algorithm (stratified 10-fold cross-validation)\\
+
+\noindent \textbf{1) Decision Tree:}
+\begin{itemize}
+    \item Hyperparameters : min split, max lenght
+    \item Best Hyperparameter: min split = 5, max lenght = 3
+    \item Best Accuracy: 0.8668
+    \item Best F1-Score: 0.8663
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./credit/credit_decision_tree.png}
+        \caption{Decision Tree Hyperparameters for Credit dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../credit/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/credit_k10_minsplit5/credit_10_minsplit5_acc.png}
+        \caption{Decision Tree Accuracy for Credit dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../credit/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/credit_k10_minsplit5/credit_10_minsplit5_f1.png}
+        \caption{Decision Tree F1-Score for Credit dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{2) Random Forests:}
+\begin{itemize}
+    \item Hyperparameters: ntree, max depths, min splits
+    \item Best Hyperparameter: ntree = 30, max depth = 5, min split = 2
+    \item Best Accuracy: 0.8728
+    \item Best F1-Score: 0.8666
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./credit/credit_random_forest.png}
+        \caption{Random Forest Hyperparameters for Credit dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../credit/HW3/HW3_CMPSCI_589_Spring2026_Supporting_Files/picture/credit_k10_depth5_minsplit2/credit_10_depth_5_minsplit2_acc.png}
+        \caption{Random Forests Accuracy for Credit dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../credit/HW3/HW3_CMPSCI_589_Spring2026_Supporting_Files/picture/credit_k10_depth5_minsplit2/credit_10_depth_5_minsplit2_f1.png}
+        \caption{RandOM Forests F1-Score for Credit dataset.} \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{3) Backpropagation Algorithm:}
+\begin{itemize}
+    \item Hyperparameters: Architecture, $\lambda$
+    \item Best Hyperparameter: Architecture = [68, 16, 1], $\lambda$ = 0.3
+    \item Best Accuracy: 0.8623
+    \item Best F1-Score: 0.8514
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./credit/credit_nn.png}
+        \caption{Backpropagation Hyperparameters for Credit dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../credit/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/credit_nn_acc.png}
+        \caption{Backpropagation Accuracy for Credit dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../credit/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/credit_nn_f1.png}
+        \caption{Backpropagation F1-Score for Credit dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\paragraph{Interpret Graph: } On the Credit dataset, Random Forests achieved the best overall performance. This dataset contains both numerical and categorical features; after one-hot encoding, the number of features increases. Decision Trees performed reasonably well, but a single tree is susceptible to subtle variations in the training data and may overfit to specific classifications. Random Forests mitigate overfitting by averaging the predictions of multiple trees. Backpropagation performed slightly worse, likely because the data became sparse after one-hot encoding. Techniques such as embeddings might alleviate this issue, but unfortunately, we are unable to use other ML libraries.
+
+\newpage
+
+\subsection*{Overall Result:}
+
+\begin{table}[H]
+\centering
+\caption{Overall best performance of each algorithm on each dataset. The gray cells indicate the highest value for each metric within the corresponding dataset.}
+\label{tab:overall-results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+& \multicolumn{2}{c}{Digits} 
+& \multicolumn{2}{c}{Parkinson} 
+& \multicolumn{2}{c}{Rice} 
+& \multicolumn{2}{c}{Credit} \\
+\cmidrule(lr){2-3} 
+\cmidrule(lr){4-5} 
+\cmidrule(lr){6-7} 
+\cmidrule(lr){8-9}
+Algorithm 
+& Accuracy & F1-Score 
+& Accuracy & F1-Score 
+& Accuracy & F1-Score 
+& Accuracy & F1-Score \\
+\midrule
+KNN
+& \cellcolor{gray!25}0.9883 
+& \cellcolor{gray!25}0.9883 
+& \cellcolor{gray!25}0.9595 
+& \cellcolor{gray!25}0.9728 
+& 0.9228 
+& 0.9094 
+& -- 
+& -- \\
+
+Decision Tree
+& -- 
+& -- 
+& -- 
+& -- 
+& -- 
+& -- 
+& 0.8668 
+& 0.8663 \\
+
+Random Forests 
+& 0.9717 
+& 0.9716 
+& 0.9334 
+& 0.9574 
+& 0.9276 
+& 0.9148 
+& \cellcolor{gray!25}0.8728 
+& \cellcolor{gray!25}0.8666 \\
+
+Backpropagation 
+& 0.9739 
+& 0.9740 
+& 0.8511 
+& 0.9055 
+& \cellcolor{gray!25}0.9286 
+& \cellcolor{gray!25}0.9166 
+& 0.8623 
+& 0.8514 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\newpage
+\medskip
+
+
+
+\newpage
+\section{Extra Credit}
+\label{sec:extra-credit}
+
+There are four ways in which we may receive extra credit on this assignment.
+
+If you choose to work on any of the tasks below, please clearly indicate in your report, in red, which specific tasks you are working on for extra credit. Describe what you did as part of that task and present the corresponding results. Any source code you develop should be included in your Gradescope submission.
+
+\textcolor{red}{\subsection*{Extra Credit Question \#1: 10 Points}}
+
+You may earn up to 10 extra points if you analyze all four datasets using an additional algorithm. In other words, you would be evaluating more than two algorithms on each of the datasets discussed in Section~1.
+
+\begin{itemize}
+    \item Digits: KNN + Random Forests + Backpropagation
+    \item Credit: Decision Tree + Random Forests + Backpropagation
+    \item Parkinson: KNN + Random Forest + Backpropagation
+    \item Rice: KNN + Random Forest + Backpropagation
+\end{itemize}
+
+\newpage
+\textcolor{red}{\subsection*{Extra Credit Question \#2: 10 Points}}
+
+You may earn up to 10 extra points if you select a new challenging dataset and evaluate the performance of different algorithms on it. A challenging dataset should necessarily include both categorical and numerical attributes and have more than two classes; or it should be a dataset where you have to classify images.\\
+
+\noindent \textbf{Dataset:} Reels/Shorts Consumption vs Attention Span
+
+\noindent https://www.kaggle.com/datasets/jayjoshi37/reelsshorts-consumption-vs-attention-span\\
+
+\noindent We used "stress level" as the target variable, which contains three classes: Low, Medium, and High.\\
+
+\noindent spam = span\\
+
+
+\noindent \subsection*{Result:}
+
+\noindent \textbf{Chosen Algorithm (2):}
+\begin{itemize}
+    \item KNN
+    \item Backpropagation Algorithm
+\end{itemize}
+
+\noindent \textbf{1) KNN:}
+\begin{itemize}
+    \item Hyperparameters : K
+    \item Best Hyperparameter: K = 5
+    \item Best Accuracy: 0.3361
+    \item Best F1-Score: 0.3360
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra2/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/spam_k10/spam_10_knn_acc.png}
+        \caption{KNN Accuracy for Spam dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra2/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/spam_k10/spam_10_knn_f1.png}
+        \caption{KNN F1-Score for Spam dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{2) Backpropagation Algorithm:}
+\begin{itemize}
+    \item Hyperparameters: Architecture, $\lambda$
+    \item Best Hyperparameter: Architecture = [11, 8, 3], $\lambda$ = 0.01
+    \item Accuracy: 0.3386
+    \item F1-Score: 0.3346
+\end{itemize}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra2/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/nn_accuracy.png}
+        \caption{Backpropagation Accuracy for Spam dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra2/HW4/HW4_CMPSCI_589_Spring2026_Supporting_Files/picture/nn_f1.png}
+        \caption{Backpropagation F1-Score for Spam dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\noindent \textbf{Interpret Graph: } Both KNN and backpropagation achieved performance scores close to 0.33, suggesting that the features we selected may not effectively distinguish among the three target categories. KNN achieved the best F1 score, while the neural network achieved a slightly higher accuracy under certain hyperparameter settings. Overall, neither model demonstrated strong predictive performance on this dataset.\\
+
+\newpage
+
+\textcolor{red}{\subsection*{Extra Credit Question \#4: 15 Points}}
+
+\noindent We implemented a weighted KNN, where in our variant, closer neighbors receive greater voting weights. For a neighbor with Euclidean distance d, we compute its voting weight as: weight = 1 / (sqrt(d) + epsilon). For each class, we sum the weights of all neighbors belonging to that class and predict the class with the highest total weight.\\
+
+\noindent \textbf{Result:}
+
+\noindent \textbf{Digits:}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../mnist/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/mnist_k10/mnist_10_knn_acc.png}
+        \caption{KNN Accuracy for MNIST dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../mnist/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/mnist_k10/mnist_10_knn_f1.png}
+        \caption{KNN F1-Score for MNIST dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/mnist/mnist_k10/mnist_10_knn_acc.png}
+        \caption{Weighted KNN Accuracy for MNIST dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/mnist/mnist_k10/mnist_10_knn_f1.png}
+        \caption{Weighted KNN F1-Score for MNIST dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\newpage
+
+\noindent \textbf{Parkinson:}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../parkinson/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinsons_k10/parkinsons_10_knn_acc.png}
+        \caption{KNN Accuracy for Parkinson dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../parkinson/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinsons_k10/parkinsons_10_knn_f1.png}
+        \caption{KNN F1-Score for Parkinson dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinson/park_k10/park_10_knn_acc.png}
+        \caption{Weighted KNN Accuracy for Parkinson dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/parkinson/park_k10/park_10_knn_f1.png}
+        \caption{Weighted KNN F1-Score for Parkinson dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\newpage
+
+\noindent \textbf{Rice:}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../rice/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/rice_k10/rice_10_knn_acc.png}
+        \caption{KNN Accuracy for Rice dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../rice/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/rice_k10/rice_10_knn_f1.png}
+        \caption{KNN F1-Score for Rice dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/rice/rice_k10/rice_10_knn_acc.png}
+        \caption{Weighted KNN Accuracy for Rice dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/rice/rice_k10/rice_10_knn_f1.png}
+        \caption{Weighted KNN F1-Score for Rice dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+\newpage
+
+\noindent \textbf{Credit:}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/redit/credit_unweighted_k10/credit_10_knn_acc.png}
+        \caption{KNN Accuracy for Credit dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/redit/credit_unweighted_k10/credit_10_knn_f1.png}
+        \caption{KNN F1-Score for Credit dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/credit/credit_k10/credit_10_knn_acc.png}
+        \caption{Weighted KNN Accuracy for Credit dataset.}
+        \label{fig:wdbc-acc}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{../extra4/HW1/HW1_CMPSCI_589_Spring2026_Supporting_Files/picture/credit/credit_k10/credit_10_knn_f1.png}
+        \caption{Weighted KNN F1-Score for Credit dataset.}
+        \label{fig:wdbc-recall}
+    \end{minipage}
+\end{figure}
+
+
+\end{document}

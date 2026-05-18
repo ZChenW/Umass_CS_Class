@@ -1,0 +1,474 @@
+%
+\documentclass[11pt]{article}
+\usepackage{xspace,mathrsfs}
+\usepackage{graphicx,rotating}
+\usepackage{url}
+\usepackage{amscd,amsfonts,amsmath,amssymb}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{multirow,setspace}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{enumerate}
+\usepackage{caption}
+\usepackage{fancyhdr}
+
+\def\shownotes{0}   % set 1 for version with author notes
+                    % set 0 for no notes
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Some macros (you can ignore everything until "end of macros")
+\topmargin 0pt \advance \topmargin by -\headheight \advance
+\topmargin by -\headsep
+
+\textheight 8.9in
+\oddsidemargin 0pt \evensidemargin \oddsidemargin \marginparwidth
+0.5in
+
+\textwidth 6.5in
+
+%%%%%%
+\DeclareMathAlphabet{\mathsl}{OT1}{cmr}{m}{sl}
+\DeclareMathAlphabet{\mathsc}{OT1}{cmr}{m}{sc}
+\DeclareMathAlphabet{\mathslbf}{OT1}{cmr}{bx}{sl}
+
+\newcommand{\procfont}[1]{\mathsc{#1}}
+\newcommand{\tablefont}[1]{\mathsf{#1}}
+\newcommand{\Initialize}{\procfont{Initialize}}
+\newcommand{\Finalize}{\procfont{Finalize}}
+\newcommand{\FinalizeCodeNoarg}{\underline{\textrm{proc} $\Finalize$}}
+\newcommand{\Onquery}[2]{\underline{\textrm{proc} $#1(#2)$}}
+\newcommand{\InitializeCode}{\underline{\textrm{proc} $\Initialize$}}
+\newcommand{\FinalizeCode}[1]{\underline{\textrm{proc} $\Finalize(#1)$}}
+
+\newcommand{\fprff}{\algfont{f}}
+\newcommand{\prim}{\primfont{P}}
+\newcommand{\adv}{\advfont{Adv}}
+
+\newcommand{\gamefont}[1]{\mathrm{#1}}
+
+\newcommand{\getsr}{{{\,\leftarrow{\hspace*{-3pt}\raisebox{.75pt}{$\scriptscriptstyle\$$}}\,}}}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\bit}{\{0,1\}}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\eqdef}{\stackrel{def}{=}}
+\newcommand{\To}{\rightarrow}
+\newcommand{\e}{\epsilon}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ie}{\emph{i.e.,} }
+\newcommand{\eg}{\emph{e.g.,} }
+\newcommand{\VAR}{\mathrm{VAR}}
+\newcommand{\Prob}[1]{{\Pr\left[\,{#1}\,\right]}}
+\newcommand{\probb}[2]{{\Pr}_{#1}\left[\,{#2}\,\right]}
+\newcommand{\probbs}[3]{{\Pr}^{#1}_{#2}\left[\,{#3}\,\right]}
+\newcommand{\probbp}[2]{{\Pr}_{#1}'\left[\,{#2}\,\right]}
+\newcommand{\Probb}[2]{{{\Pr}_{#1}\left[\,{#2}\,\right]}}
+\newcommand{\Probbp}[2]{{{\Pr}_{#1}'\left[\,{#2}\,\right]}}
+\newcommand{\condProb}[2]{{\Pr}\left[\,#1\,|\,#2\,\right]}
+\newcommand{\expect}[1]{{{\mathbf{E}}[{#1}]}}
+\newcommand{\next}{ \: ; \: }
+\newcommand{\true}{\mathsf{true}}
+\newcommand{\false}{\mathsf{false}}
+\newcommand{\AND}{\;\wedge\;}
+\newcommand{\bad}{\mathsf{bad}}
+\newcommand{\MsgSp}{\mathsf{MsgSp}}
+\newcommand{\Gm}{\textnormal{G}}
+\newcommand{\fn}{\footnotesize}
+\newcommand{\schemefont}[1]{{\mathsf{#1}}}
+\newcommand{\algfont}[1]{{\mathsf{#1}}}
+\newcommand{\Adv}{\mathbf{Adv}}
+\newcommand{\AdvGen}[3]{\mathbf{Adv}^{\mathrm{#1}}_{#2}(#3)}
+\newcommand{\Exp}{\mathbf{Exp}}
+
+\newcommand{\INDCPA}{\mbox{IND-CPA}}
+\newcommand{\AdvINDCPA}[2]{\AdvGen{ind\text{-}cpa}{#1}{#2}}
+\newcommand{\AdvINTCTXT}[2]{\AdvGen{int\text{-}ctxt}{#1}{#2}}
+
+\newcommand{\LR}{\mathsf{LR}}
+
+\newcommand{\calA}{{\cal A}}
+\newcommand{\calB}{{\cal B}}
+\newcommand{\calC}{{\cal C}}
+\newcommand{\calF}{{\cal F}}
+\newcommand{\calK}{{\cal K}}
+\newcommand{\calM}{{\cal M}}
+\newcommand{\calO}{{\cal O}}
+\newcommand{\calR}{{\cal R}}
+\newcommand{\calH}{{\cal H}}
+\newcommand{\calG}{{\cal G}}
+\newcommand{\calD}{{\cal D}}
+\newcommand{\calE}{{\cal E}}
+\newcommand{\calP}{{\cal P}}
+\newcommand{\calS}{{\cal S}}
+\newcommand{\calT}{{\cal T}}
+\newcommand{\calU}{{\cal U}}
+\newcommand{\calX}{{\cal X}}
+\newcommand{\calV}{{\cal V}}
+\newcommand{\calW}{{\cal W}}
+\newcommand{\calY}{{\cal Y}}
+\newcommand{\calN}{{\cal N}}
+
+\DeclareMathAlphabet{\mathsl}{OT1}{cmr}{m}{sl}
+
+\providecommand{\mypara}[1]{\smallskip\noindent\emph{#1} }
+\providecommand{\myparab}[1]{\smallskip\noindent\textbf{#1} }
+\providecommand{\myparasc}[1]{\smallskip\noindent\textsc{#1} }
+\providecommand{\para}{\smallskip\noindent}
+
+\newcommand{\Keys}{\mathsf{Keys}}
+\newcommand{\Dom}{\mathsf{Dom}}
+\newcommand{\Rng}{\mathsf{Rng}}
+
+\newcommand{\main}{\procfont{Game}}
+
+\newcommand{\gamesfontsize}{\small}
+\renewcommand{\captionfont}{}
+\newcommand{\indd}{\hspace*{12pt}}
+
+\newcommand{\mpage}[2]{\begin{minipage}{#1\textwidth} #2 \end{minipage}}
+\newcommand{\fpage}[2]{\framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize  #2 \end{minipage}}}
+
+\newcommand{\hfpages}[3]{\hfpagess{#1}{#1}{#2}{#3}}
+\newcommand{\hfpagess}[4]{
+        \begin{tabular}{c@{\hspace*{.5em}}c}
+        \framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize #3 \end{minipage}}
+        &
+        \framebox{\begin{minipage}[t]{#2\textwidth}\setstretch{1.2}\gamesfontsize #4 \end{minipage}}
+        \end{tabular}
+    }
+
+\newcommand{\twoCols}[4]{
+\begin{center}
+        \framebox{
+        \begin{tabular}{c@{\hspace*{.4em}}|c@{\hspace*{.4em}}c}
+        \begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize #3 \end{minipage}
+        &
+        \begin{minipage}[t]{#2\textwidth}\setstretch{1.2}\gamesfontsize #4 \end{minipage}
+        \end{tabular}
+        }
+\end{center}
+}
+
+\newcommand{\gameName}[1]{\underline{$\main$ #1} \\}
+\newcommand{\procName}[1]{\underline{#1} \\[2pt]}
+
+\newcommand{\bea}{\begin{eqnarray*}}
+\newcommand{\eea}{\end{eqnarray*}}
+
+\newcommand{\return}{\textrm{Ret}~}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{propo}[thm]{Proposition}
+\newtheorem{clm}[thm]{Claim}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{assm}[thm]{Assumption}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{obs}[thm]{Observation}
+\newtheorem{egs}[thm]{Example}
+\newtheorem{fct}[thm]{Fact}
+\newtheorem{expr}{Experiment}
+\newtheorem{cons}[thm]{Construction}
+\newtheorem{nte}[thm]{Note}
+\newtheorem{coj}[thm]{Conjecture}
+\newtheorem{ques}[thm]{Question}
+
+%%%%%%%  Author Notes %%%%%%%
+\ifnum\shownotes=1
+\newcommand{\authnote}[2]{{ $\ll$\textsf{\footnotesize Solution: #2}$\gg$}}
+\else
+\newcommand{\authnote}[2]{}
+\fi
+\newcommand{\Anote}[1]{{\authnote{Adam}{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Scheme-specific macros for this exercise
+\newcommand{\GF}{\mathrm{GF}(2^{128})}
+\newcommand{\GHASH}{\mathrm{GHASH}}
+\newcommand{\Poly}{\mathrm{Poly1305}}
+\newcommand{\ChaCha}{\mathrm{ChaCha20}}
+\newcommand{\AESGCM}{\mathsf{AES\text{-}GCM}}
+\newcommand{\CCP}{\mathsf{ChaCha20\text{-}Poly1305}}
+\newcommand{\ctr}{\mathrm{ctr}}
+
+% end of macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{CS~466: Group Exercise}
+
+\date{}
+
+% page counting, header/footer
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\lhead{\footnotesize \parbox{11cm}{CS 466, UMass Amherst, Spring 2026} }
+\rhead{\footnotesize Instructor:  Adam O'Neill \\ \url{adamo@cs.umass.edu}}
+\renewcommand{\headheight}{24pt}
+
+\begin{document}
+
+\maketitle
+
+%Don't forget to add this for header.
+\thispagestyle{fancy}
+
+\paragraph*{GROUP EXERCISE.}
+
+\bigskip
+\noindent
+In lecture we studied authenticated encryption via \emph{generic
+composition}.
+Here we examine $\AESGCM$ and $\CCP$---the two AEAD schemes mandated
+by TLS~1.3---to see how that theory plays out in practice, and to work
+through the nonce-reuse attack that breaks both schemes when nonces are
+mismanaged.
+All problems set $A = \varepsilon$.
+
+\bigskip
+
+%%%% BACKGROUND %%%%
+
+\noindent\textbf{Nonce-Based AEAD.}\quad
+\begin{sloppypar}
+An \emph{authenticated encryption with associated data (AEAD)}
+scheme $\mathcal{AE} = (\calK, \calE, \calD)$ consists of an
+encryption algorithm
+$\calE \colon \calK \times \calN \times \calA \times \calM \to \calC$
+and a decryption algorithm
+$\calD \colon \calK \times \calN \times \calA \times \calC \to \calM \cup \{\bot\}$,
+where $\calN$ is the \emph{nonce space} and $\calA$ is the
+\emph{associated-data space}.
+$\calE$ is \emph{deterministic}: the caller supplies a nonce
+$N \in \calN$ instead of random coins, but must \emph{never reuse}
+$N$ under the same key.
+Correctness: $\calD_K(N, A, \calE_K(N, A, M)) = M$.
+The scheme is \emph{secure} if it achieves both IND-CPA
+(ciphertext indistinguishability) and INT-CTXT (ciphertext integrity) defined below.
+\end{sloppypar}
+
+The \emph{associated data}~$A$ is authenticated but not encrypted.
+Real protocols attach unencrypted metadata to every message---a TLS
+record type, a sequence number, a session ID---that must be
+\emph{authentic} (to prevent replay or context-confusion attacks) but
+need not be secret.
+AEAD authenticates $A$ and $M$ together in one pass: $\calD$ outputs
+$\bot$ if $A$ is tampered with, binding each ciphertext to its context.
+TLS~1.3 sets $A$ to the 5-byte record header; we set $A=\varepsilon$
+below to focus on the core structure.
+
+\smallskip
+{\hfuzz=3pt\begin{center}
+\hfpagess{0.42}{0.51}{%
+  \gameName{IND-CPA$^b$}
+  \vspace*{-\topsep}
+  \begin{tabbing}
+  \hspace{0.6em}\=\hspace{1.2em}\=\kill
+  \> \InitializeCode\\
+  \>\> $b \getsr \{0,1\}$; $K \getsr \calK$; $\mathit{asked} \gets \emptyset$\\[3pt]
+  \> \Onquery{Enc}{N,A,M_0,M_1}\\
+  \>\> $\textbf{if}\ |M_0| \ne |M_1|\ \textbf{then return}\ \bot$\\
+  \>\> $\textbf{if}\ N \in \mathit{asked}\ \textbf{then return}\ \bot$\\
+  \>\> $\mathit{asked} \gets \mathit{asked} \cup \{N\}$\\
+  \>\> $\textbf{return}\ \calE_K(N,A,M_b)$\\[3pt]
+  \> \FinalizeCode{b'}\\
+  \>\> $\textbf{return}\ b' = b$
+  \end{tabbing}
+}{%
+  \gameName{INT-CTXT}
+  \vspace*{-\topsep}
+  \begin{tabbing}
+  \hspace{0.6em}\=\hspace{1.2em}\=\kill
+  \> \InitializeCode\\
+  \>\> $K \getsr \calK$;\; $\mathcal{S} \gets \emptyset$;\; $\mathit{win} \gets \mathbf{false}$\\[3pt]
+  \> \Onquery{Enc}{N,A,M}\\
+  \>\> $C \gets \calE_K(N,A,M)$\\
+  \>\> $\mathcal{S} \gets \mathcal{S}\cup\{(N,A,C)\}$\\
+  \>\> $\textbf{return}\ C$\\[3pt]
+  \> \Onquery{Dec}{N,A,C}\\
+  \>\> $\textbf{if}\ (N,A,C)\in\mathcal{S}\ \textbf{then return}\ \bot$\\
+  \>\> $M \gets \calD_K(N,A,C)$\\
+  \>\> $\textbf{if}\ M \ne \bot\ \textbf{then}\ \mathit{win} \gets \mathbf{true}$\\
+  \>\> $\textbf{return}\ M$\\[3pt]
+  \> \FinalizeCodeNoarg\\
+  \>\> $\textbf{return}\ \mathit{win}$
+  \end{tabbing}
+}
+\end{center}}
+
+\bigskip
+
+\noindent\textbf{Arithmetic in $\GF$.}\quad
+$\GF$ (a \emph{Galois field}) is a finite number system with
+$2^{128}$ elements where you can add, subtract, multiply, and divide.
+Its elements are 128-bit strings; \emph{addition} is XOR
+($a + b = a \oplus b$), and \emph{multiplication} is polynomial
+arithmetic modulo a fixed irreducible polynomial
+(hardware-accelerated via \texttt{PCLMULQDQ}).
+The key fact: \emph{a nonzero polynomial of degree~$d$ over $\GF$
+has at most $d$ roots}---exactly as over~$\mathbb{R}$.
+We write $H^\ell$ for the $\ell$-fold product in~$\GF$.
+
+\bigskip
+
+\noindent\textbf{GHASH.}\quad
+Since addition in $\GF$ equals XOR, $\oplus$ and $+$ are
+interchangeable below.
+Given hash key $H \in \bits^{128}$ and message blocks
+$X[1]\|\cdots\|X[\ell]$, GHASH evaluates a polynomial at $H$:
+\[
+  \GHASH_H(X[1]\|\cdots\|X[\ell])
+  \;=\;
+  X[1] \cdot H^{\ell}
+  \;\oplus\;
+  X[2] \cdot H^{\ell-1}
+  \;\oplus\;
+  \cdots
+  \;\oplus\;
+  X[\ell] \cdot H.
+\]
+The AES-GCM tag has the form $T = \GHASH_H(C) \oplus S$,
+where $S = E_K(\ctr(N,0))$.
+This differs from the deterministic MACs in lecture, where security
+comes from modeling $\mathrm{MAC}_K$ as a PRF\@.
+Here, $\GHASH_H$ alone is not pseudorandom: $H$ is a static key, so
+evaluations at the same $H$ are algebraically related.
+Security instead rests on $S$: it is a fresh pseudorandom value
+unknown to the adversary, making $T$ unpredictable despite the
+algebraic structure of $\GHASH_H(C)$.
+Crucially, $S$ must be used \emph{at most once}---reusing a nonce
+repeats $S$, which is exactly what Problem~3 exploits.
+
+\bigskip
+
+\noindent\textbf{$\AESGCM$.}\quad
+$E \colon \bits^{128} \times \bits^{128} \to \bits^{128}$ is AES-128;
+$K \getsr \bits^{128}$.
+Messages are block-aligned: $M[1]\|\cdots\|M[\ell]$, each block 128~bits.
+$\ctr(N, i)$ denotes the 128-bit block formed from nonce $N \in \bits^{96}$
+and counter~$i$.
+
+{\hfuzz=3pt\begin{center}
+\hfpagess{0.45}{0.49}{%
+  \underline{\textbf{Alg} $\calE_K(N, M)$}\\
+  \vspace*{-\topsep}
+  \begin{tabbing}
+  \hspace{0.8em}\=\hspace{1.2em}\=\kill
+  \> $H \gets E_K(0^{128})$\\
+  \> $\textbf{for}\ i = 1\ \textbf{to}\ \ell\ \textbf{do}$\\
+  \>\> $C[i] \gets M[i] \oplus E_K(\ctr(N,i))$\\
+  \> $T \gets \GHASH_H(C[1]\|\cdots\|C[\ell])$\\
+  \> \phantom{$T \gets {}$}$\oplus\; E_K(\ctr(N,0))$\\
+  \> $\textbf{return}\ C[1]\|\cdots\|C[\ell]\|T$
+  \end{tabbing}
+}{%
+  \underline{\textbf{Alg} $\calD_K(N,\; C\|T)$}\\
+  \vspace*{-\topsep}
+  \begin{tabbing}
+  \hspace{0.8em}\=\hspace{1.2em}\=\kill
+  \> $H \gets E_K(0^{128})$\\
+  \> $T' \gets \GHASH_H(C[1]\|\cdots\|C[\ell])$\\
+  \> \phantom{$T' \gets {}$}$\oplus\; E_K(\ctr(N,0))$\\
+  \> $\textbf{if}\ T \ne T'\ \textbf{then return}\ \bot$\\
+  \> $\textbf{for}\ i = 1\ \textbf{to}\ \ell\ \textbf{do}$\\
+  \>\> $M[i] \gets C[i] \oplus E_K(\ctr(N,i))$\\
+  \> $\textbf{return}\ M[1]\|\cdots\|M[\ell]$
+  \end{tabbing}
+}
+\end{center}}
+
+\bigskip
+
+\noindent\textbf{Poly1305.}\quad
+Poly1305 uses the same two-part tag structure as GHASH
+(polynomial hash $+$ one-time mask), but over $\mathbb{Z}_p$
+for prime $p = 2^{130}-5$.
+A key pair $(r, s)$ plays the same roles as $(H,\, E_K(\ctr(N,0)))$ in
+AES-GCM: $r$ is the \emph{evaluation point} and $s$ is the
+\emph{one-time mask}.
+Each message block $X[i]$ is treated as an integer $x_i \in \mathbb{Z}_p$.
+The tag is
+\[
+  \Poly_{r,s}(X[1]\|\cdots\|X[\ell])
+  \;=\;
+  \Bigl(\sum_{i=1}^{\ell} x_i \cdot r^{\ell+1-i} \bmod p\Bigr)
+  + s \;\bmod 2^{128}.
+\]
+Since $p$ is prime, $\mathbb{Z}_p$ is a field and so the at-most-$d$-roots fact above applies.
+A fresh $(r, s)$ is derived for every nonce, so $(r, s)$ is never reused.
+
+\bigskip
+
+\noindent\textbf{$\CCP$.}\quad
+ChaCha20 is a stream cipher; $K \getsr \bits^{256}$, nonce
+$N \in \bits^{96}$.
+Write $\mathit{ks}_K(N, j)$ for the $j$-th 128-bit keystream block
+(counters $j \ge 1$).
+The Poly1305 key $(r,s)$ is the first 256~bits of $\ChaCha_K(N,0)$.
+
+{\hfuzz=3pt\begin{center}
+\hfpagess{0.45}{0.49}{%
+  \underline{\textbf{Alg} $\calE_K(N, M)$}\\
+  \vspace*{-\topsep}
+  \begin{tabbing}
+  \hspace{0.8em}\=\hspace{1.2em}\=\kill
+  \> $(r, s) \gets$ first $256$ bits of $\ChaCha_K(N, 0)$\\
+  \> $\textbf{for}\ j = 1\ \textbf{to}\ \ell\ \textbf{do}$\\
+  \>\> $C[j] \gets M[j] \oplus \mathit{ks}_K(N, j)$\\
+  \> $T \gets \Poly_{r,s}(C[1]\|\cdots\|C[\ell])$\\
+  \> $\textbf{return}\ C[1]\|\cdots\|C[\ell]\|T$
+  \end{tabbing}
+}{%
+  \underline{\textbf{Alg} $\calD_K(N,\; C\|T)$}\\
+  \vspace*{-\topsep}
+  \begin{tabbing}
+  \hspace{0.8em}\=\hspace{1.2em}\=\kill
+  \> $(r, s) \gets$ first $256$ bits of $\ChaCha_K(N, 0)$\\
+  \> $T' \gets \Poly_{r,s}(C[1]\|\cdots\|C[\ell])$\\
+  \> $\textbf{if}\ T \ne T'\ \textbf{then return}\ \bot$\\
+  \> $\textbf{for}\ j = 1\ \textbf{to}\ \ell\ \textbf{do}$\\
+  \>\> $M[j] \gets C[j] \oplus \mathit{ks}_K(N, j)$\\
+  \> $\textbf{return}\ M[1]\|\cdots\|M[\ell]$
+  \end{tabbing}
+}
+\end{center}}
+
+\bigskip
+
+
+\paragraph*{Problem 1.} (AES-GCM.)
+
+\noindent\textbf{Part A} (5 points).
+Which generic composition paradigm does $\AESGCM$ follow? Briefly justify your answer.
+
+\medskip
+
+\noindent\textbf{Part B} (10 points).
+Consider a variant of $\AESGCM$ that replaces $E_K(\ctr(N,0))$ with
+the constant $E_K(0^{128})$, making the tag mask independent of the nonce.
+Show this variant is \emph{not} INT-CTXT.
+
+\bigskip
+
+\paragraph*{Problem 2.} (ChaCha20-Poly1305.)
+
+\noindent\textbf{Part A} (5 points).
+Which generic composition paradigm does $\CCP$ follow? Briefly justify your answer.
+
+\bigskip
+
+\paragraph*{Problem 3.} (Nonce-Reuse Attack on AES-GCM, 20 points.)
+
+\noindent
+Show that $\AESGCM$ is \emph{not} INT-CTXT when nonces may be reused.
+
+\noindent\emph{Hint}: $T_1 \oplus T_2$ yields a polynomial equation in $H$ over $\GF$. Moreover, $\GF$ is a field, so division (i.e.\ multiplication by the inverse) is defined for any nonzero element.
+
+
+\end{document}

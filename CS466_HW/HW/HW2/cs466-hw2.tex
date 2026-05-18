@@ -1,0 +1,395 @@
+%
+
+\documentclass[11pt]{article}
+\usepackage{xspace,mathrsfs}
+\usepackage{graphicx,rotating}
+%\usepackage{graphicx,pstricks,rotating}
+
+\usepackage{url}
+%\usepackage{latexsym}
+\usepackage{amscd,amsfonts,amsmath,amssymb}
+
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{multirow,setspace}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{fancyhdr}
+
+
+\def\shownotes{0}   % set 1 for version with author notes
+                    % set 0 for no notes
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Some macros (you can ignore everything until "end of macros")
+\topmargin 0pt \advance \topmargin by -\headheight \advance
+\topmargin by -\headsep
+
+\textheight 8.9in
+\oddsidemargin 0pt \evensidemargin \oddsidemargin \marginparwidth
+0.5in
+
+\textwidth 6.5in
+
+%%%%%%
+\DeclareMathAlphabet{\mathsl}{OT1}{cmr}{m}{sl}
+\DeclareMathAlphabet{\mathsc}{OT1}{cmr}{m}{sc}
+\DeclareMathAlphabet{\mathslbf}{OT1}{cmr}{bx}{sl}
+
+\newcommand{\procfont}[1]{\mathsc{#1}}
+\newcommand{\tablefont}[1]{\mathsf{#1}}
+\newcommand{\Initialize}{\procfont{Initialize}}
+\newcommand{\Finalize}{\procfont{Finalize}}
+\newcommand{\FinalizeCodeNoarg}{\underline{\textrm{proc} $\Finalize$}}
+\newcommand{\Onquery}[2]{\underline{\textrm{proc} $#1(#2)$}}
+\newcommand{\InitializeCode}{\underline{\textrm{proc} $\Initialize$}}
+\newcommand{\FinalizeCode}[1]{\underline{\textrm{proc} $\Finalize(#1)$}}
+
+\newcommand{\fprff}{\algfont{f}}
+
+\newcommand{\prim}{\primfont{P}}
+\newcommand{\adv}{\advfont{Adv}}
+
+
+\newcommand{\gamefont}[1]{\mathrm{#1}}
+
+\newcommand{\getsr}{{{\,\leftarrow{\hspace*{-3pt}\raisebox{.75pt}{$\scriptscriptstyle\$$}}\,}}}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\bit}{\{0,1\}}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\eqdef}{\stackrel{def}{=}}
+\newcommand{\To}{\rightarrow}
+\newcommand{\e}{\epsilon}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ie}{\emph{i.e.,} }
+\newcommand{\eg}{\emph{e.g.,} }
+\newcommand{\VAR}{\mathrm{VAR}}
+\newcommand{\Prob}[1]{{\Pr\left[\,{#1}\,\right]}}
+\newcommand{\probb}[2]{{\Pr}_{#1}\left[\,{#2}\,\right]}
+\newcommand{\probbs}[3]{{\Pr}^{#1}_{#2}\left[\,{#3}\,\right]}
+\newcommand{\probbp}[2]{{\Pr}_{#1}'\left[\,{#2}\,\right]}
+\newcommand{\Probb}[2]{{{\Pr}_{#1}\left[\,{#2}\,\right]}}
+\newcommand{\Probbp}[2]{{{\Pr}_{#1}'\left[\,{#2}\,\right]}}
+\newcommand{\condProb}[2]{{\Pr}\left[\,#1\,|\,#2\,\right]}
+\newcommand{\CondProb}[2]{{\Pr}\left[\: #1\:\left|\right.\:#2\:\right]}
+\newcommand{\CondProbb}[3]{{\Pr}_{#1}\left[\: #2\:\left|\right.\:#3\:\right]}
+\newcommand{\ProbExp}[2]{{\Pr}\left[\: #1\:\suchthatt\:#2\:\right]}
+\newcommand{\expect}[1]{{{\mathbf{E}}[{#1}]}}
+\newcommand{\expectt}[1]{{{\mathbf{E}}\left[{#1}\right]}}
+\newcommand{\qquadd}{{\quad}}
+\newcommand{\next}{ \: ; \: }
+\newcommand{\dsim}{\overline{S}}
+\newcommand{\st}{\mathit{St}}
+\newcommand{\newst}{\overline{\mathit{St}}}
+\newcommand{\group}{\mathbb{G}}
+\newcommand{\goutputs}{\:{\Rightarrow}\:}
+\newcommand{\outputs}{\textrm{ outputs }}
+\newcommand{\wins}{\textrm{ wins}}
+\newcommand{\true}{\mathsf{true}}
+\newcommand{\false}{\mathsf{false}}
+\newcommand{\AND}{\;\wedge\;}
+\newcommand{\bad}{\mathsf{bad}}
+\newcommand{\Good}{\mathsf{Good}}
+\newcommand{\MsgSp}{\mathsf{MsgSp}}
+\newcommand{\Gm}{\textnormal{G}}
+\newcommand{\fn}{\footnotesize}
+\newcommand{\schemefont}[1]{{\mathsf{#1}}}
+\newcommand{\algfont}[1]{{\mathsf{#1}}}
+\newcommand{\Adv}{\mathbf{Adv}}
+\newcommand{\AdvGen}[3]{\mathbf{Adv}^{\mathrm{#1}}_{#2}(#3)}
+\newcommand{\Exp}{\mathbf{Exp}}
+\newcommand{\advclass}[2]{\mathcal{A}^{#1}_{#2}}
+\newcommand{\advA}{A}
+\newcommand{\advB}{B}
+\newcommand{\advI}{I}
+\newcommand{\advW}{W}
+\newcommand{\advH}{H}
+\newcommand{\advU}{U}
+\newcommand{\advX}{C}
+\newcommand{\advS}{S}
+\newcommand{\INDCPA}{\mbox{IND-CPA}}
+\newcommand{\ExpINDCPA}[2]{\mathrm{INDCPA}_{#1,#2}}
+\newcommand{\AdvINDCPA}[2]{\AdvGen{indcpa}{#1}{#2}}
+\newcommand{\AdvSOAR}[2]{\mathbf{Adv}^{\mathrm{soa}\mbox{-}\mathrm{c}}_{#1}(#2)}
+\newcommand{\AdvSOAK}[2]{\mathbf{Adv}^{\mathrm{soa}\mbox{-}\mathrm{k}}_{#1}(#2)}
+
+
+\newcommand{\LR}{\mathsf{LR}}
+
+\newcommand{\calA}{{\cal A}}
+\newcommand{\calB}{{\cal B}}
+\newcommand{\calC}{{\cal C}}
+\newcommand{\calF}{{\cal F}}
+\newcommand{\calK}{{\cal K}}
+\newcommand{\calM}{{\cal M}}
+\newcommand{\calO}{{\cal O}}
+\newcommand{\calR}{{\cal R}}
+\newcommand{\calH}{{\cal H}}
+\newcommand{\calG}{{\cal G}}
+\newcommand{\calD}{{\cal D}}
+\newcommand{\calE}{{\cal E}}
+\newcommand{\calP}{{\cal P}}
+\newcommand{\calS}{{\cal S}}
+\newcommand{\calT}{{\cal T}}
+\newcommand{\calU}{{\cal U}}
+\newcommand{\calX}{{\cal X}}
+\newcommand{\calV}{{\cal V}}
+\newcommand{\calW}{{\cal W}}
+\newcommand{\calY}{{\cal Y}}
+
+\newcommand{\defined}{\ensuremath{\mathsf{defined}}}
+\newcommand{\undefined}{\ensuremath{\mathsf{undefined}}}
+\newcommand{\zero}{\ensuremath{\mathsf{zer}}}
+\newcommand{\one}{\ensuremath{\mathsf{one}}}
+
+
+\DeclareMathAlphabet{\mathsl}{OT1}{cmr}{m}{sl}
+
+\providecommand{\mypara}[1]{\smallskip\noindent\emph{#1} }
+\providecommand{\myparab}[1]{\smallskip\noindent\textbf{#1} }
+\providecommand{\myparasc}[1]{\smallskip\noindent\textsc{#1} }
+\providecommand{\para}{\smallskip\noindent}
+
+
+\newcommand{\Keys}{\mathsf{Keys}}
+\newcommand{\Dom}{\mathsf{Dom}}
+\newcommand{\Rng}{\mathsf{Rng}}
+
+\newcommand{\main}{\procfont{Game}}
+
+
+\newcommand{\gamesfontsize}{\small}
+% \footnotesize}
+\renewcommand{\captionfont}{}
+\newcommand{\indd}{\hspace*{12pt}}
+
+\newcommand{\mpage}[2]{\begin{minipage}{#1\textwidth} #2 \end{minipage}}
+\newcommand{\fpage}[2]{\framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize  #2 \end{minipage}}}
+
+\newcommand{\hfpages}[3]{\hfpagess{#1}{#1}{#2}{#3}}
+\newcommand{\hfpagess}[4]{
+        \begin{tabular}{c@{\hspace*{.5em}}c}
+        \framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize #3 \end{minipage}}
+        &
+        \framebox{\begin{minipage}[t]{#2\textwidth}\setstretch{1.2}\gamesfontsize #4 \end{minipage}}
+        \end{tabular}
+    }
+\newcommand{\hfpagesss}[6]{
+        \begin{tabular}{c@{\hspace*{.1em}}c@{\hspace*{.1em}}c}
+        \framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize #4 \end{minipage}}
+        &
+        \framebox{\begin{minipage}[t]{#2\textwidth}\setstretch{1.2}\gamesfontsize #5 \end{minipage}}
+        &
+        \framebox{\begin{minipage}[t]{#3\textwidth}\setstretch{1.2}\gamesfontsize #6 \end{minipage}}
+        \end{tabular}
+    }
+
+\newcommand{\hfpagessss}[8]{
+        \begin{tabular}{c@{\hspace*{.5em}}c}
+        \framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize #5 \end{minipage}}
+        &
+        \framebox{\begin{minipage}[t]{#2\textwidth}\setstretch{1.2}\gamesfontsize
+#6 \end{minipage}}\\[3in]
+        \framebox{\begin{minipage}[t]{#3\textwidth}\setstretch{1.2}\gamesfontsize #7 \end{minipage}} 
+        & 
+		\framebox{\begin{minipage}[t]{#4\textwidth}\setstretch{1.2}\gamesfontsize #8 \end{minipage}}
+        \end{tabular}
+    }
+
+\newcommand{\boxFourColTable}[8]{
+		\fpage{0.98}{\smallskip
+        \begin{tabular}{c@{\hspace*{.1em}}|@{\hspace*{.4em}}c@{\hspace*{.1em}}|@{\hspace*{.4em}}c@{\hspace*{.1em}}|@{\hspace*{.4em}}c@{\hspace*{.1em}}}
+        {\begin{minipage}[t]{#1\textwidth}\setstretch{1}\gamesfontsize #5 \end{minipage}}
+        &
+        {\begin{minipage}[t]{#2\textwidth}\setstretch{1}\gamesfontsize #6 \end{minipage}}
+        &
+        {\begin{minipage}[t]{#3\textwidth}\setstretch{1}\gamesfontsize #7 \end{minipage}}
+		&
+		{\begin{minipage}[t]{#4\textwidth}\setstretch{1}\gamesfontsize #8 \end{minipage}}
+
+        \end{tabular}\smallskip
+        }
+    }
+
+
+
+\newcommand{\boxFourColThreeSepTable}[8]{
+		\smallskip
+        \begin{tabular}{c@{\hspace*{.1em}}|@{\hspace*{.4em}}c@{\hspace*{.1em}}|@{\hspace*{.4em}}c@{\hspace*{.2em}}c}
+        {\begin{minipage}[t]{#1\textwidth}\setstretch{1}\gamesfontsize #5 \end{minipage}}
+        &
+        {\begin{minipage}[t]{#2\textwidth}\setstretch{1}\gamesfontsize #6 \end{minipage}}
+        &
+        {\begin{minipage}[t]{#3\textwidth}\setstretch{1}\gamesfontsize #7 \end{minipage}}
+		&
+		{\begin{minipage}[t]{#4\textwidth}\setstretch{1}\gamesfontsize #8 \end{minipage}}
+
+        \end{tabular}\smallskip
+
+    }
+
+\newcommand{\hpagesl}[3]{\begin{tabular}{c|c}\begin{minipage}{#1\textwidth} #2 \end{minipage} & \begin{minipage}{#1\textwidth} #3 \end{minipage}\end{tabular}}
+\newcommand{\hpagessl}[4]{\begin{tabular}{c|c}\begin{minipage}[t]{#1\textwidth} #3 \end{minipage} & \begin{minipage}[t]{#2\textwidth} #4 \end{minipage}\end{tabular}}
+\newcommand{\hpages}[3]{\begin{tabular}{cc}\begin{minipage}[t]{#1\textwidth} #2 \end{minipage} & \begin{minipage}[t]{#1\textwidth} #3 \end{minipage}\end{tabular}}
+\newcommand{\hpagess}[4]{
+    \begin{tabular}{cc}
+    \begin{minipage}[t]{#1\textwidth}\setstretch{1.1}\gamesfontsize  #3 \end{minipage}
+    &
+    \begin{minipage}[t]{#2\textwidth}\setstretch{1.1}\gamesfontsize #4 \end{minipage}\end{tabular}
+   }
+\newcommand{\hpagesss}[6]{
+    \begin{tabular}{ccc}
+    \begin{minipage}[t]{#1\textwidth}\setstretch{1.1}\gamesfontsize #4 \end{minipage} &
+    \begin{minipage}[t]{#2\textwidth}\setstretch{1.1}\gamesfontsize #5 \end{minipage} &
+    \begin{minipage}[t]{#3\textwidth}\setstretch{1.1}\gamesfontsize #6 \end{minipage}
+    \end{tabular}}
+\newcommand{\hpagessss}[8]{
+    \begin{tabular}{cc}
+    \begin{minipage}[t]{#1\textwidth}\setstretch{1.1}\gamesfontsize  #5 \end{minipage} &
+    \begin{minipage}[t]{#2\textwidth}\setstretch{1.1}\gamesfontsize #6 \end{minipage}\\
+    \begin{minipage}[t]{#3\textwidth}\setstretch{1.1}\gamesfontsize  #7 \end{minipage} & 
+    \begin{minipage}[t]{#4\textwidth}\setstretch{1.1}\gamesfontsize  #8 \end{minipage}
+    \end{tabular}}
+
+
+
+\newcommand{\hpagesssl}[6]{
+    \begin{tabular}{c|c|c}
+    \begin{minipage}[t]{#1\textwidth} #4 \end{minipage} &
+    \begin{minipage}[t]{#2\textwidth} #5 \end{minipage} &
+    \begin{minipage}[t]{#3\textwidth} #6 \end{minipage}
+    \end{tabular}}
+
+\newcommand{\threeCols}[6]{
+\begin{center}
+        \framebox{
+        \begin{tabular}{@{\hspace{-0.2em}}c@{\hspace{0.2em}}|@{\hspace{0.2em}}c@{\hspace{0.2em}}|@{\hspace{0.2em}}c@{\hspace{0.2em}}}
+        \begin{minipage}[t]{#1\textwidth}\setstretch{1.1}\gamesfontsize #4
+        \end{minipage} &
+        \begin{minipage}[t]{#2\textwidth}\setstretch{1.1}\gamesfontsize #5
+        \end{minipage} &
+        \begin{minipage}[t]{#3\textwidth}\setstretch{1.1}\gamesfontsize #6
+        \end{minipage}
+        \end{tabular}
+        }
+\end{center}
+}
+
+\newcommand{\twoCols}[4]{
+\begin{center}
+        \framebox{
+        \begin{tabular}{c@{\hspace*{.4em}}|c@{\hspace*{.4em}}c}
+        \begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize #3 \end{minipage}
+        &
+        \begin{minipage}[t]{#2\textwidth}\setstretch{1.2}\gamesfontsize #4 \end{minipage}
+        \end{tabular}
+        }
+\end{center}
+}
+
+
+\newcommand{\gameName}[1]{\underline{$\main$ #1} \\[2pt]}
+\newcommand{\procName}[1]{\underline{#1} \\[2pt]}
+
+\newcommand{\bnm}{\begin{newmath}}
+\newcommand{\enm}{\end{newmath}}
+
+\newcommand{\bea}{\begin{eqnarray*}}
+\newcommand{\eea}{\end{eqnarray*}}
+
+\newcommand{\return}{\textrm{Ret}~}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{propo}[thm]{Proposition}
+\newtheorem{clm}[thm]{Claim}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{assm}[thm]{Assumption}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{obs}[thm]{Observation}
+\newtheorem{egs}[thm]{Example}
+\newtheorem{fct}[thm]{Fact}
+\newtheorem{expr}{Experiment}
+\newtheorem{cons}[thm]{Construction}
+\newtheorem{nte}[thm]{Note}
+\newtheorem{coj}[thm]{Conjecture}
+\newtheorem{ques}[thm]{Question}
+
+
+%%%%%%%  Author Notes %%%%%%%
+%
+\ifnum\shownotes=1
+\newcommand{\authnote}[2]{{ $\ll$\textsf{\footnotesize Solution: #2}$\gg$}}
+\else
+\newcommand{\authnote}[2]{}
+\fi
+\newcommand{\Snote}[1]{{\authnote{Sharon}{#1}}}
+\newcommand{\Inote}[1]{{\authnote{Ilir}{#1}}}
+\newcommand{\Ichanged}[1]{{\authnote{Changed}{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+% end of macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{CS 466: Homework 2}
+
+
+%\author{Ungraded. There is an optional bonus problem.}
+\date{}
+%\\Ex 1-4 due by Thursday February 23 at 11:59PM as a PDF via websubmit.
+%\\Ex 5-8 due by Thursday March 1 at 11:59PM as a PDF via websubmit.}
+
+% page counting, header/footer
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\pagestyle{fancy}
+\lhead{\footnotesize \parbox{11cm}{CS 466, UMass Amherst, Spring 2026} }
+\rhead{\footnotesize Instructor:  Adam O'Neill \\ \url{adamo@cs.umass.edu}}
+\renewcommand{\headheight}{24pt}
+
+\begin{document}
+
+
+
+\maketitle
+
+%Don't forget to add this for header.
+\thispagestyle{fancy}
+
+\noindent Due
+
+\paragraph*{Acronyms.} Below,  EKS means exhaustive key search, CKR means conistent key recovery, TKR mean target key recovery.  Please ask me if anything is unclear. 
+
+\paragraph*{Problem 1.} Define the family of functions $F \colon \bits^{256} \times \bits^{256} \to \bits^{256}$ by 
+ \begin{center}
+\begin{minipage}{1in}
+\begin{tabbing}
+123\=123\=123\=123\=123\=\kill
+\textbf{Algorithm} $F_{K_1 \| K_2}(x_1 \| x_2)$: \\
+\> Return $\mathsf{AES}^{-1}(K_1, x_1 \oplus x_2) \| \mathsf{AES}(K_2, \overline{x_2})$
+\end{tabbing} \end{minipage}
+\end{center}
+for all $K_1, K_2, x_1, x_2 \in \bits^{128}$. Here  `$\|$' denotes string concatenation, `$\oplus$' denotes bit-wise exclusive-or, and $\overline{x}$ denotes the bit-wise complement of a string $x$.  Let $T_{\mathsf{AES}}$ denote the time for one computation of $\mathsf{AES}$ or $\mathsf{AES}^{-1}$. Below, running-times are worst case and should be functions of $T_{\mathsf{AES}}$. \\\\
+ (Part A - 10 points.) Prove that $F$ is a blockcipher. \\\\
+ (Part B - 10 points.) What is the running-time of a 4-query EKS adversary  against $F$? \\\\
+ (Part C - 30 points.) Give the most efficient 4-query CKR adversary that you can having advantage 1 against $F$. State your adversary in  pseudocode and  analyze its advantage and resource usage. To get any points, you need to substantially beat EKS.
+
+ \paragraph*{Problem 2.} 
+
+For $n \in \N$, define the family of functions  $$\mathsf{OTP} \colon \bits^n\times\bits^n\to\bits^n$$ by $\mathsf{OTP}_K(x)= K\oplus x$ for all $K,x\in \bits^n$.
+Now define another family of functions $$\mathsf{OTP}':\bits^{2n}\times\bits^n\to\bits^n$$ where a key $K \in \bits^{2n}$ is parsed as $K_1 \| K_2$ for $K_1,K_2 \in \bits^n$ and 
+$$\mathsf{OTP}'_{K_1\|K_2}(x) = \mathsf{OTP}_{K_1}(x)$$ for all $K_1,K_2,x \in \bits^n$. \\\\
+(Part A - 25 points.) Give an efficient 1-query CKR adversary with maximal advantage against $\mathsf{OTP}'$. As usual, state your adversary in  pseudocode and  analyze its advantage and resource usage. To get any points, you need to substantially beat EKS. \\\\
+(Part B - 25 points.) Give an efficient 1-query TKR adversary with maximal advantage against $\mathsf{OTP}'$. As usual, state your adversary in  pseudocode and  analyze its advantage and resource usage. To get any points, you need to substantially beat EKS.
+\end{document}

@@ -1,0 +1,240 @@
+\documentclass[11pt]{article}
+\usepackage{xspace,mathrsfs}
+\usepackage{graphicx,rotating}
+\usepackage{url}
+\usepackage{amscd,amsfonts,amsmath,amssymb}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{multirow,setspace}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{fancyhdr}
+
+\def\shownotes{0}   % set 1 for version with author notes
+                    % set 0 for no notes
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some macros (you can ignore everything until "end of macros")
+\topmargin 0pt \advance \topmargin by -\headheight \advance
+\topmargin by -\headsep
+
+\textheight 8.9in
+\oddsidemargin 0pt \evensidemargin \oddsidemargin \marginparwidth
+0.5in
+
+\textwidth 6.5in
+
+%%%%%%
+\DeclareMathAlphabet{\mathsl}{OT1}{cmr}{m}{sl}
+\DeclareMathAlphabet{\mathsc}{OT1}{cmr}{m}{sc}
+\DeclareMathAlphabet{\mathslbf}{OT1}{cmr}{bx}{sl}
+
+\newcommand{\procfont}[1]{\mathsc{#1}}
+\newcommand{\algfont}[1]{{\mathsf{#1}}}
+\newcommand{\schemefont}[1]{{\mathsf{#1}}}
+
+\newcommand{\gamefont}[1]{\mathrm{#1}}
+\newcommand{\getsr}{{{\,\leftarrow{\hspace*{-3pt}\raisebox{.75pt}{$\scriptscriptstyle\$$}}\,}}}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\xor}{\oplus}
+\newcommand{\Adv}{\mathbf{Adv}}
+\newcommand{\AdvGen}[3]{\mathbf{Adv}^{\mathrm{#1}}_{#2}(#3)}
+\newcommand{\Prob}[1]{{\Pr\left[\,{#1}\,\right]}}
+\newcommand{\main}{\procfont{Game}}
+\newcommand{\gameName}[1]{\underline{$\main$ #1} \\[2pt]}
+\newcommand{\return}{\textrm{Ret}~}
+
+\newcommand{\gamesfontsize}{\small}
+\renewcommand{\captionfont}{}
+\newcommand{\indd}{\hspace*{12pt}}
+
+\newcommand{\mpage}[2]{\begin{minipage}{#1\textwidth} #2 \end{minipage}}
+\newcommand{\fpage}[2]{\framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize  #2 \end{minipage}}}
+\newcommand{\hfpages}[3]{\hfpagess{#1}{#1}{#2}{#3}}
+\newcommand{\hfpagess}[4]{
+        \begin{tabular}{c@{\hspace*{.5em}}c}
+        \framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize #3 \end{minipage}}
+        &
+        \framebox{\begin{minipage}[t]{#2\textwidth}\setstretch{1.2}\gamesfontsize #4 \end{minipage}}
+        \end{tabular}
+    }
+
+\newcommand{\Initialize}{\procfont{Initialize}}
+\newcommand{\Finalize}{\procfont{Finalize}}
+\newcommand{\LR}{\procfont{LR}}
+\newcommand{\Enc}{\procfont{Enc}}
+\newcommand{\Vf}{\procfont{Vf}}
+\newcommand{\InitializeCode}{\underline{\textrm{proc} $\Initialize$}\\[2pt]}
+\newcommand{\FinalizeCode}[1]{\underline{\textrm{proc} $\Finalize(#1)$}\\[2pt]}
+\newcommand{\FinalizeCodeNoArg}{\underline{\textrm{proc} $\Finalize$}\\[2pt]}
+\newcommand{\LRCode}{\underline{\textrm{proc} $\LR(M_0, M_1)$}\\[2pt]}
+\newcommand{\EncCode}[1]{\underline{\textrm{proc} $\Enc(#1)$}\\[2pt]}
+\newcommand{\VfCode}[1]{\underline{\textrm{proc} $\Vf(#1)$}\\[2pt]}
+
+\newcommand{\calK}{{\cal K}}
+\newcommand{\calM}{{\cal M}}
+\newcommand{\calE}{{\cal E}}
+\newcommand{\calD}{{\cal D}}
+\newcommand{\calN}{{\cal N}}
+\newcommand{\calC}{{\cal C}}
+\newcommand{\calS}{{\cal S}}
+\newcommand{\calT}{{\cal T}}
+\newcommand{\calH}{{\cal H}}
+
+\newcommand{\AES}{\mathsf{AES}}
+\newcommand{\GHASH}{\mathsf{GHASH}}
+\newcommand{\GF}{\mathrm{GF}}
+\newcommand{\CBCMAC}{\mathsf{CBC\mbox{-}MAC}}
+
+%%%%%%%  Author Notes %%%%%%%
+\ifnum\shownotes=1
+\newcommand{\authnote}[2]{{ $\ll$\textsf{\footnotesize #2}$\gg$}}
+\else
+\newcommand{\authnote}[2]{}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% end of macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{COMPSCI 466: Homework 6}
+\date{}
+
+\usepackage{lastpage}
+\pagestyle{fancy}
+\lhead{\footnotesize \parbox{11cm}{COMPSCI 466, UMass Amherst, Spring 2026} }
+\rhead{\footnotesize Instructor:  Adam O'Neill \\ \url{adamo@cs.umass.edu}}
+\renewcommand{\headheight}{24pt}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+
+\noindent
+\textbf{Due date:}  May 5 11:59pm.
+
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Problem 1. (100 points.)}
+Define the symmetric encryption scheme $\schemefont{SE} = (\calK, \calE, \calD)$
+where $\calK$ returns a uniformly random 128-bit key $K$, and the encryption
+and decryption algorithms are as follows.
+
+\begin{center}
+\begin{tabular}{c|c}
+\begin{minipage}[t]{2.1in}
+\begin{tabbing}
+123\=123\=123\=\kill
+\textbf{Algorithm} $\calE_K(M)$: \\
+\> If $|M| \neq 512$ then \return $\bot$ \\
+\> Parse $M$ as $M[1] \| M[2] \| M[3] \| M[4]$ \\
+\> $C_e[0] \getsr \bits^{128}$ \\
+\> $C_m[0] \gets 0^{128}$ \\
+\> For $i = 1, 2, 3, 4$ do: \\
+\>\> $C_e[i] \gets \AES_K(C_e[i-1] \xor M[i])$ \\
+\>\> $C_m[i] \gets \AES_K(C_m[i-1] \xor M[i])$ \\
+\> $C_e \gets C_e[0] \| C_e[1] \| C_e[2] \| C_e[3] \| C_e[4]$ \\
+\> $T \gets C_m[4]$ \\
+\> \return $(C_e, T)$
+\end{tabbing}
+\end{minipage}
+&
+\begin{minipage}[t]{2.2in}
+\begin{tabbing}
+123\=123\=123\=\kill
+\textbf{Algorithm} $\calD_K((C_e, T))$: \\
+\> If $|C_e| \neq 640$ then \return $\bot$ \\
+\> Parse $C_e$ as $C_e[0]\|C_e[1]\|\cdots\|C_e[4]$ \\
+\> $C_m[0] \gets 0^{128}$ \\
+\> For $i = 1, 2, 3, 4$ do: \\
+\>\> $M[i] \gets \AES^{-1}_K(C_e[i]) \xor C_e[i-1]$ \\
+\>\> $C_m[i] \gets \AES_K(C_m[i-1] \xor M[i])$ \\
+\> If $C_m[4] = T$ then \return $M[1]\|M[2]\|M[3]\|M[4]$ \\
+\> Else \return $\bot$
+\end{tabbing}
+\end{minipage}
+\end{tabular}
+\end{center}
+
+\bigskip
+
+\noindent
+\textbf{(Part A --- 40 points.)}
+Show that $\schemefont{SE}$ is \emph{not} IND-CPA secure.
+State your adversary $A$ in pseudocode and analyze its advantage and resource usage.
+\medskip
+
+\noindent
+\textbf{(Part B --- 40 points.)}
+Show that $\schemefont{SE}$ is \emph{not} INT-CTXT secure.
+State your adversary $A$ in pseudocode and analyze its advantage and resource usage. 
+
+\medskip
+
+\noindent
+\textbf{(Part C --- 20 points.)} Is $\schemefont{SE}$ an Encrypt-and-MAC scheme? Briefly justify your answer.
+
+\bigskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph*{Bonus Problem. (40 points.)}
+Consider the modified scheme $\schemefont{SE}' = (\calK', \calE', \calD')$ where
+$\calK'$ samples $K_e, K_m \getsr \bits^{128}$ and returns $(K_e, K_m)$.
+The encryption and decryption algorithms are:
+
+\begin{center}
+\begin{tabular}{c|c}
+\begin{minipage}[t]{2.2in}
+\begin{tabbing}
+123\=123\=123\=\kill
+\textbf{Algorithm} $\calE'_{(K_e, K_m)}(M)$: \\
+\> If $|M| \neq 512$ then \return $\bot$ \\
+\> Parse $M$ as $M[1] \| M[2] \| M[3] \| M[4]$ \\
+\> $C_e[0] \getsr \bits^{128}$ \\
+\> $C_m[0] \gets 0^{128}$ \\
+\> For $i = 1, 2, 3, 4$ do: \\
+\>\> $C_e[i] \gets \AES_{K_e}(C_e[i-1] \xor M[i])$ \\
+\>\> $C_m[i] \gets \AES_{K_m}(C_m[i-1] \xor M[i])$ \\
+\> $C_e \gets C_e[0] \| C_e[1] \| C_e[2] \| C_e[3] \| C_e[4]$ \\
+\> $T \gets C_m[4]$ \\
+\> \return $(C_e, T)$
+\end{tabbing}
+\end{minipage}
+&
+\begin{minipage}[t]{2.3in}
+\begin{tabbing}
+123\=123\=123\=\kill
+\textbf{Algorithm} $\calD'_{(K_e, K_m)}((C_e, T))$: \\
+\> If $|C_e| \neq 640$ then \return $\bot$ \\
+\> Parse $C_e$ as $C_e[0]\|C_e[1]\|\cdots\|C_e[4]$ \\
+\> $C_m[0] \gets 0^{128}$ \\
+\> For $i = 1, 2, 3, 4$ do: \\
+\>\> $M[i] \gets \AES^{-1}_{K_e}(C_e[i]) \xor C_e[i-1]$ \\
+\>\> $C_m[i] \gets \AES_{K_m}(C_m[i-1] \xor M[i])$ \\
+\> If $C_m[4] = T$ then \return $M[1]\|M[2]\|M[3]\|M[4]$ \\
+\> Else \return $\bot$
+\end{tabbing}
+\end{minipage}
+\end{tabular}
+\end{center}
+
+\medskip
+
+\noindent
+\textbf{(Part A --- 20 points.)}
+Is $\schemefont{SE}'$ IND-CPA secure? If yes, give convincing intuition. If no, give an attack.
+
+\medskip
+
+\noindent
+\textbf{(Part B --- 20 points.)}
+Is $\schemefont{SE}'$ INT-CTXT secure? If yes, give convincing intuition. If no, give an attack.
+
+\end{document}

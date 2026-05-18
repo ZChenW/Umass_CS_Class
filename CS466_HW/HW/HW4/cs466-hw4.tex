@@ -1,0 +1,213 @@
+\documentclass[11pt]{article}
+\usepackage{xspace,mathrsfs}
+\usepackage{graphicx,rotating}
+%\usepackage{graphicx,pstricks,rotating}
+
+\usepackage{url}
+%\usepackage{latexsym}
+\usepackage{amscd,amsfonts,amsmath,amssymb}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{multirow,setspace}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{fancyhdr}
+
+
+\def\shownotes{0}   % set 1 for version with author notes
+                    % set 0 for no notes
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Some macros (you can ignore everything until "end of macros")
+\topmargin 0pt \advance \topmargin by -\headheight \advance
+\topmargin by -\headsep
+
+\textheight 8.9in
+\oddsidemargin 0pt \evensidemargin \oddsidemargin \marginparwidth
+0.5in
+
+\textwidth 6.5in
+
+%%%%%%
+\DeclareMathAlphabet{\mathsl}{OT1}{cmr}{m}{sl}
+\DeclareMathAlphabet{\mathsc}{OT1}{cmr}{m}{sc}
+\DeclareMathAlphabet{\mathslbf}{OT1}{cmr}{bx}{sl}
+
+\newcommand{\procfont}[1]{\mathsc{#1}}
+\newcommand{\tablefont}[1]{\mathsf{#1}}
+\newcommand{\Initialize}{\procfont{Initialize}}
+\newcommand{\Finalize}{\procfont{Finalize}}
+\newcommand{\FinalizeCodeNoarg}{\underline{\textrm{proc} $\Finalize$}}
+\newcommand{\Onquery}[2]{\underline{\textrm{proc} $#1(#2)$}}
+\newcommand{\InitializeCode}{\underline{\textrm{proc} $\Initialize$}}
+\newcommand{\FinalizeCode}[1]{\underline{\textrm{proc} $\Finalize(#1)$}}
+
+\newcommand{\fprff}{\algfont{f}}
+
+\newcommand{\gamefont}[1]{\mathrm{#1}}
+
+\newcommand{\getsr}{{{\,\leftarrow{\hspace*{-3pt}\raisebox{.75pt}{$\scriptscriptstyle\$$}}\,}}}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\bit}{\{0,1\}}
+\newcommand{\Ex}{\mathbb{E}}
+\newcommand{\eqdef}{\stackrel{def}{=}}
+\newcommand{\To}{\rightarrow}
+\newcommand{\e}{\epsilon}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ie}{\emph{i.e.,} }
+\newcommand{\eg}{\emph{e.g.,} }
+\newcommand{\VAR}{\mathrm{VAR}}
+\newcommand{\Prob}[1]{{\Pr\left[\,{#1}\,\right]}}
+\newcommand{\probb}[2]{{\Pr}_{#1}\left[\,{#2}\,\right]}
+\newcommand{\probbs}[3]{{\Pr}^{#1}_{#2}\left[\,{#3}\,\right]}
+\newcommand{\probbp}[2]{{\Pr}_{#1}'\left[\,{#2}\,\right]}
+\newcommand{\Probb}[2]{{{\Pr}_{#1}\left[\,{#2}\,\right]}}
+\newcommand{\Probbp}[2]{{{\Pr}_{#1}'\left[\,{#2}\,\right]}}
+\newcommand{\condProb}[2]{{\Pr}\left[\,#1\,|\,#2\,\right]}
+\newcommand{\CondProb}[2]{{\Pr}\left[\: #1\:\left|\right.\:#2\:\right]}
+\newcommand{\CondProbb}[3]{{\Pr}_{#1}\left[\: #2\:\left|\right.\:#3\:\right]}
+\newcommand{\expect}[1]{{{\mathbf{E}}[{#1}]}}
+\newcommand{\expectt}[1]{{{\mathbf{E}}\left[{#1}\right]}}
+\newcommand{\qquadd}{{\quad}}
+\newcommand{\next}{ \: ; \: }
+\newcommand{\group}{\mathbb{G}}
+\newcommand{\true}{\mathsf{true}}
+\newcommand{\false}{\mathsf{false}}
+\newcommand{\AND}{\;\wedge\;}
+\newcommand{\bad}{\mathsf{bad}}
+\newcommand{\schemefont}[1]{{\mathsf{#1}}}
+\newcommand{\algfont}[1]{{\mathsf{#1}}}
+\newcommand{\Adv}{\mathbf{Adv}}
+\newcommand{\AdvGen}[3]{\mathbf{Adv}^{\mathrm{#1}}_{#2}(#3)}
+\newcommand{\Exp}{\mathbf{Exp}}
+\newcommand{\LR}{\mathsf{LR}}
+
+\newcommand{\calA}{{\cal A}}
+\newcommand{\calB}{{\cal B}}
+\newcommand{\calC}{{\cal C}}
+\newcommand{\calF}{{\cal F}}
+\newcommand{\calK}{{\cal K}}
+\newcommand{\calM}{{\cal M}}
+\newcommand{\calO}{{\cal O}}
+\newcommand{\calR}{{\cal R}}
+\newcommand{\calH}{{\cal H}}
+\newcommand{\calG}{{\cal G}}
+\newcommand{\calD}{{\cal D}}
+\newcommand{\calE}{{\cal E}}
+\newcommand{\calP}{{\cal P}}
+\newcommand{\calS}{{\cal S}}
+\newcommand{\calT}{{\cal T}}
+\newcommand{\calU}{{\cal U}}
+\newcommand{\calX}{{\cal X}}
+\newcommand{\calV}{{\cal V}}
+\newcommand{\calW}{{\cal W}}
+\newcommand{\calY}{{\cal Y}}
+
+\newcommand{\Keys}{\mathsf{Keys}}
+\newcommand{\Dom}{\mathsf{Dom}}
+\newcommand{\Rng}{\mathsf{Rng}}
+
+\newcommand{\main}{\procfont{Game}}
+\newcommand{\gamesfontsize}{\small}
+\renewcommand{\captionfont}{}
+\newcommand{\indd}{\hspace*{12pt}}
+
+\newcommand{\mpage}[2]{\begin{minipage}{#1\textwidth} #2 \end{minipage}}
+\newcommand{\fpage}[2]{\framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize  #2 \end{minipage}}}
+\newcommand{\hfpages}[3]{\hfpagess{#1}{#1}{#2}{#3}}
+\newcommand{\hfpagess}[4]{
+        \begin{tabular}{c@{\hspace*{.5em}}c}
+        \framebox{\begin{minipage}[t]{#1\textwidth}\setstretch{1.2}\gamesfontsize #3 \end{minipage}}
+        &
+        \framebox{\begin{minipage}[t]{#2\textwidth}\setstretch{1.2}\gamesfontsize #4 \end{minipage}}
+        \end{tabular}
+    }
+
+\newcommand{\gameName}[1]{\underline{$\main$ #1} \\[2pt]}
+\newcommand{\procName}[1]{\underline{#1} \\[2pt]}
+\newcommand{\bea}{\begin{eqnarray*}}
+\newcommand{\eea}{\end{eqnarray*}}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{clm}[thm]{Claim}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{rem}[thm]{Remark}
+
+%%%%%%%  Author Notes %%%%%%%
+\ifnum\shownotes=1
+\newcommand{\authnote}[2]{{ $\ll$\textsf{\footnotesize #2}$\gg$}}
+\else
+\newcommand{\authnote}[2]{}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% end of macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{CS 466: Homework 4}
+\date{}
+
+\usepackage{lastpage}
+\pagestyle{fancy}
+\lhead{\footnotesize \parbox{11cm}{COMPSCI 466, UMass Amherst, Spring 2026} }
+\rhead{\footnotesize Instructor:  Adam O'Neill \\ \url{adamo@cs.umass.edu}}
+\renewcommand{\headheight}{24pt}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\noindent Due March 15, 11:59pm.
+
+
+\paragraph*{Problem 1.} (50 points.)
+Define key-generation algorithm $\calK$ to output a random 128-bit key
+$K$ and define encryption algorithm $\calE$ by
+\begin{center}
+\begin{minipage}{1.6in}
+\begin{tabbing}
+123\=123\=123\=123\=123\=\kill
+\textbf{Algorithm} $\calE_K(M)$: \\
+\> $C[0] \getsr \bits^{128}$ \\
+\> For $i = 1$ to $m$ do: \\
+\>\> $W[i] \gets \langle (C[0] + i) \bmod 2^{128} \rangle$ \\
+\>\> $C[i] \gets \mathsf{AES}_K(M[i] \oplus W[i])$ \\
+\> $C \gets C[0] \| \ldots \| C[m]$ \\
+\> Return $C$
+\end{tabbing}
+\end{minipage}
+\end{center}
+Above we parse $M$ as consisting of $m$ blocks of 128 bits each, and
+$\langle \cdot \rangle$ denotes the standard 128-bit integer encoding.
+Note that this scheme can be seen as a variant of counter mode. Recall that standard CTR mode computes
+$C[i] \gets \mathsf{AES}_K\!\bigl(\langle(R + i) \bmod 2^{128}\rangle\bigr) \oplus M[i]$:
+the key stream is generated by applying $\mathsf{AES}$ to a counter derived from
+the nonce $R$, and the message block is XOR'd with the \emph{output} of $\mathsf{AES}$.
+In the scheme above the roles are reversed: the message block is XOR'd with the
+counter \emph{before} being fed into $\mathsf{AES}$, so that the input to $\mathsf{AES}$
+is message-dependent.
+
+\medskip\noindent (Part A --- 20 points.)
+Define a decryption algorithm $\calD$ such that
+$\schemefont{SE} = (\calK, \calE, \calD)$ is a correct symmetric-key
+encryption scheme.
+
+\medskip\noindent (Part B --- 80 points.)
+Show that $\schemefont{SE}$ is \emph{not} IND-CPA.
+Your adversary must be practical: it should make at most a small constant
+number of $\LR$-queries and perform only minor additional computation.
+State your adversary in pseudocode and compute its advantage and resource usage.
+
+
+\end{document}

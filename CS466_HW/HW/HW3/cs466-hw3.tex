@@ -1,0 +1,124 @@
+\documentclass[11pt]{article}
+\usepackage{xspace,mathrsfs}
+\usepackage{graphicx,rotating}
+\usepackage{url}
+\usepackage{amscd,amsfonts,amsmath,amssymb}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{multirow,setspace}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+\def\shownotes{0}
+
+\topmargin 0pt \advance \topmargin by -\headheight \advance \topmargin by -\headsep
+\textheight 8.9in
+\oddsidemargin 0pt \evensidemargin \oddsidemargin \marginparwidth 0.5in
+\textwidth 6.5in
+
+\DeclareMathAlphabet{\mathsl}{OT1}{cmr}{m}{sl}
+\DeclareMathAlphabet{\mathsc}{OT1}{cmr}{m}{sc}
+\DeclareMathAlphabet{\mathslbf}{OT1}{cmr}{bx}{sl}
+
+\newcommand{\procfont}[1]{\mathsc{#1}}
+\newcommand{\getsr}{{{\,\leftarrow{\hspace*{-3pt}\raisebox{.75pt}{$\scriptscriptstyle\$$}}\,}}}
+\newcommand{\bits}{\{0,1\}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Prob}[1]{{\Pr\left[\,{#1}\,\right]}}
+\newcommand{\next}{ \: ; \: }
+\newcommand{\Adv}{\mathbf{Adv}}
+
+\newcommand{\true}{\mathsf{true}}
+\newcommand{\false}{\mathsf{false}}
+
+\newcommand{\calK}{{\cal K}}
+\newcommand{\calE}{{\cal E}}
+\newcommand{\calD}{{\cal D}}
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{rem}[thm]{Remark}
+
+\title{COMPSCI 466: Homework 2}
+\date{}
+
+\pagestyle{fancy}
+\lhead{\footnotesize \parbox{11cm}{COMPSCI 466, UMass Amherst}}
+\rhead{\footnotesize Instructor: Adam O'Neill \\ \url{adamo@cs.umass.edu}}
+\renewcommand{\headheight}{24pt}
+
+\begin{document}
+\thispagestyle{fancy}
+
+\paragraph*{HOMEWORK 2} Due March 3 at 11:59PM on Gradescope.
+
+\medskip\noindent Note: In showing that function families below are not secure PRFs, exhaustive key search and birthday attacks are inefficient and will receive no credit. Your adversaries must be practical, making at most a handful of queries and performing only minor additional computation. For each adversary, clearly state its advantage and resource usage.
+
+\paragraph*{Problem 1.} (30 points.)
+Define the family of functions $F \colon \bits^{128} \times \bits^{256} \to \bits^{128}$ by
+\[
+F(K, M_1 \| M_2) = \mathsf{AES}(K, M_1) \oplus \mathsf{AES}(K, M_2)
+\]
+for all $K \in \bits^{128}$ and $M_1, M_2 \in \bits^{128}$. Show that $F$ is not a secure PRF.
+
+\paragraph*{Problem 2.} (70 points.)
+Let $G \colon \bits^k \times \bits^{\ell} \to \bits^{\ell}$ be a family of functions (arbitrary but given, hence known to the adversary) and let $r \geq 1$ be an integer. The \emph{$r$-round Feistel cipher associated to $G$} is the family of functions $G^{(r)} \colon \bits^k \times \bits^{2\ell} \to \bits^{2\ell}$ defined as follows for any key $K \in \bits^k$ and input $x \in \bits^{2\ell}$:
+
+\begin{center}
+\begin{minipage}{2in}
+\begin{tabbing}
+123\=123\=123\=123\=123\=\kill
+\textbf{Algorithm} $G^{(r)}(K,x)$: \\
+\> Parse $x$ as $L_0 \| R_0$ where $|L_0| = |R_0| = \ell$ \\
+\> For $i = 1$ to $r$ do: \\
+\>\> $L_i \gets R_{i-1} \next R_i \gets G(K, R_{i-1}) \oplus L_{i-1}$ \\
+\> Return $L_r \| R_r$
+\end{tabbing}
+\end{minipage}
+\end{center}
+
+\noindent (Part A --- 20 points.) Show that $G^{(1)}$ is not a secure PRF.
+
+\medskip\noindent (Part B --- 30 points.) Show that $G^{(2)}$ is not a secure PRF.
+
+\medskip\noindent (Part C --- 20 points.) Now consider a two-key variant of the 2-round Feistel cipher. Specifically, define $H \colon \bits^{2k} \times \bits^{2\ell} \to \bits^{2\ell}$ by using independent round keys $K_1, K_2 \in \bits^k$:
+
+\begin{center}
+\begin{minipage}{2in}
+\begin{tabbing}
+123\=123\=123\=123\=123\=\kill
+\textbf{Algorithm} $H(K_1 \| K_2, x)$: \\
+\> Parse $x$ as $L_0 \| R_0$ where $|L_0| = |R_0| = \ell$ \\
+\> $L_1 \gets R_0 \next R_1 \gets G(K_1, R_0) \oplus L_0$ \\
+\> $L_2 \gets R_1 \next R_2 \gets G(K_2, R_1) \oplus L_1$ \\
+\> Return $L_2 \| R_2$
+\end{tabbing}
+\end{minipage}
+\end{center}
+
+\noindent Show that $H$ is not a secure PRF.
+
+\paragraph*{Optional Bonus Problem.}
+
+The \emph{ideal cipher model}, first proposed by Shannon, models a blockcipher as a family of \emph{independent} random permutations, one per key. Concretely, for key-length $k$ and block-length $\ell$, an ideal cipher $\mathsf{IC} \colon \bits^k \times \bits^\ell \to \bits^\ell$ is one where for each fixed key $K \in \bits^k$, the function $\mathsf{IC}(K, \cdot)$ is an independently and uniformly random permutation on $\bits^\ell$, unknown to everyone until queried. An adversary in the ideal cipher model may query $\mathsf{IC}(K', M')$ for any $(K', M')$ of its choice; the model guarantees consistency (same query always returns the same answer) and that the mapping for each fixed key remains a valid permutation.
+
+\medskip\noindent (Part A.)
+In your own words, explain what the ideal cipher model assumes about a blockcipher and compare it to modeling the blockcipher as a secure PRF. In particular: is a real blockcipher like $\mathsf{AES}$ an ideal cipher? Discuss briefly.
+
+\medskip\noindent (Part B.)
+%Recall that a \emph{$q$-query exhaustive key search adversary} $A^q_{\mathrm{eks}}$ attempts key recovery by testing candidate keys one at a time against a known plaintext-ciphertext pair, outputting the first candidate that is consistent with the observed ciphertext.
+
+\begin{enumerate}
+\item[(i)] Write pseudocode for $A^1_{\mathrm{eks}}$ in the ideal cipher model. %Your adversary makes exactly one query to $\mathsf{Fn}$ (the target encryption oracle, which encrypts under the hidden key $K$) and one query to $\mathsf{IC}$, and outputs the first consistent key it finds.
+
+\item[(ii)] Compute the TKR-advantage of $A^1_{\mathrm{eks}}$ as a closed-form expression in $k$ and $\ell$. \textbf{Hint:} The target key $K$ is always consistent. Each other candidate key $K' \neq K$ is independently consistent with probability $1/2^\ell$. What is the probability that $K$ is the \emph{first} consistent key found?
+\end{enumerate}
+
+\end{document}
