@@ -1,0 +1,493 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\title{Assignment 3}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*]
+
+\item \textbf{(25 points)} Let $Y$ be the set of possible worlds. Recall that $F_i$ is player $i$'s partition of $Y$ into disjoint information sets, and that for a given world $\omega \in Y$, $F_i(\omega)$ is the information set in $F_i$ that contains $\omega$. Recall that given an event $A \subseteq Y$, the set of all worlds where player $i$ knows $A$ is defined as:
+\[
+    K_i(A) = \{\omega \in Y : F_i(\omega) \subseteq A\}.
+\]
+Prove the following statements.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{(5 points)} For any two events $A, B \subseteq Y$,
+    \[
+        K_i(A) \cap K_i(B) = K_i(A \cap B).
+    \]
+    In words, if player $i$ knows $A$ and $B$, then they know $A \cap B$.
+
+    \item \textbf{(5 points)} $K_i(A) \subseteq A$: if player $i$ knows $A$ then $A$ occurs.
+
+    \item \textbf{(5 points)} $K_i(K_i(A)) = K_i(A)$: player $i$ knows $A$ if and only if they know that they know $A$.
+
+    \item \textbf{(5 points)} Let $(K_i(A))^c$ be $Y \setminus K_i(A)$ be the set of worlds where $i$ does not know $A$; then
+    \[
+        (K_i(A))^c = K_i\bigl((K_i(A))^c\bigr):
+    \]
+    player $i$ does not know $A$ if and only if they know that they don't know $A$.
+
+    \item \textbf{(5 points)} Let $A, B \subseteq Y$ be two events. If $A \subseteq B$, then for any player $i$,
+    \[
+        K_i(A) \subseteq K_i(B).
+    \]
+\end{enumerate}
+
+\textbf{Solution:}
+
+\textbf{a)}
+\[
+\omega \in K_i(A) \text{ and } \omega \in K_i(B)
+\]
+\[
+F_i(\omega) \subseteq A \text{ and } F_i(\omega) \subseteq B
+\]
+\[
+F_i(\omega) \subseteq A \cap B
+\]
+\[
+\omega \in K_i(A \cap B)
+\]
+\textbf{b)}
+
+Take any \(\omega \in K_i(A)\).
+\[\omega \in F_i(\omega)\]
+\[
+F_i(\omega) \subseteq A
+\]
+\[
+\omega \in A
+\]
+Therefore,
+\[
+K_i(A) \subseteq A
+\]
+\textbf{c)}
+
+Assume \(\omega \in K_i(A)\),
+\[
+F_i(\omega)\subseteq A
+\]
+Take any \(\omega' \in F_i(\omega)\). Since \(F_i\) is a partition and
+\(\omega'\) is in the same information set as \(\omega\),
+\[
+F_i(\omega')=F_i(\omega)
+\]
+Thus,
+\[
+F_i(\omega')\subseteq A
+\]
+\[
+\omega'\in K_i(A)
+\]
+Since this holds for every \(\omega'\in F_i(\omega)\), we have
+\[
+F_i(\omega)\subseteq K_i(A)
+\]
+Therefore,
+\[
+\omega\in K_i(K_i(A))
+\]
+So,
+\[
+K_i(A)\subseteq K_i(K_i(A))
+\]
+
+By part (b), we take \( B = K_i(A)\),
+\[
+K_i(K_i(A))\subseteq K_i(A)
+\]
+
+Therefore,
+\[
+K_i(K_i(A))=K_i(A)
+\]
+
+\textbf{d)}
+
+By part (b), we take \(B = (K_i(A))^c\),
+\[
+K_i((K_i(A))^c)\subseteq (K_i(A))^c
+\]
+
+Now assume \(\omega\in (K_i(A))^c\). Then
+\[
+\omega\notin K_i(A)
+\]
+\[
+F_i(\omega)\nsubseteq A
+\]
+Take any \(\omega'\in F_i(\omega)\). Since \(F_i\) is a partition and
+\(\omega'\) is in the same information set as \(\omega\),
+\[
+F_i(\omega')=F_i(\omega)
+\]
+Hence,
+\[
+F_i(\omega')\nsubseteq A
+\]
+\[
+\omega'\notin K_i(A)
+\]
+\[
+\omega'\in (K_i(A))^c
+\]
+Since this holds for every \(\omega'\in F_i(\omega)\), we have
+\[
+F_i(\omega)\subseteq (K_i(A))^c
+\]
+Thus,
+\[
+\omega\in K_i((K_i(A))^c)
+\]
+\[
+(K_i(A))^c\subseteq K_i((K_i(A))^c)
+\]
+
+Hence,
+\[
+(K_i(A))^c = K_i((K_i(A))^c)
+\]
+
+\textbf{e)}
+
+Assume \(A\subseteq B\). Take any \(\omega\in K_i(A)\). Then
+\[
+F_i(\omega)\subseteq A
+\]
+Since
+\[
+A\subseteq B
+\]
+we have
+\[
+F_i(\omega)\subseteq B
+\]
+Therefore,
+\[
+\omega\in K_i(B)
+\]
+Hence,
+\[
+K_i(A)\subseteq K_i(B)
+\]
+
+\newpage
+
+\item \textbf{(10 points)} Three people are standing in a row. Amirmahdi (Player A) can only see the heads of players B and C. Ben (Player B) can only see Player C. Chang (Player C) cannot see anyone's heads. Yair holds three red hats and two blue hats\footnote{These are the only hats around, no other hats magically appear during the course of this activity.}. He asks each player in the order A, B, C whether they know the color of their hat. Both A and B say ``no.''
+
+Assume that players' information sets are common knowledge, e.g., Chang knows that Ben can only see the hat on Chang's head, he also knows that Ben knows that Amirmahdi can only see the hats on Ben and Chang's heads and so on.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{(5 points)} What will player C say? Present your answer using information sets and player beliefs.
+
+    \item \textbf{(5 points)} Is it true that for any assignment of hats to the players some player will know the color of their hat? Explain your answer using information sets and player beliefs.
+\end{enumerate}
+
+\textbf{Solution:}
+
+\textbf{a)}
+
+C says: "Yes, my hat is red"\\
+
+Information Set: 
+
+A says no, which eliminates
+\[
+RBB
+\]
+B says no, which eliminates
+\[
+RRB, \ BRB
+\]
+Therefore, the remaining possible worlds are
+\[
+\{RRR, RBR, BRR, BBR\}
+\]
+\[
+C = R
+\]
+
+\textbf{b)}
+
+Yes\\
+
+If \(A\) sees two blue hats, then the actual world is \(RBB\), so \(A\) knows that his hat is red.
+
+If \(A\) says no, then \(RBB\) is eliminated. Now if \(C\) is wearing a blue hat, then \(B\) knows that his own hat cannot be blue; otherwise \(A\) would have seen two blue hats and would not have said no. Hence \(B\) knows that his hat is red.
+
+If \(B\) also says no, then \(C\) cannot be wearing a blue hat. Therefore, \(C\) is wearing a red hat
+
+\newpage
+
+\item \textbf{(30 points)} Awesome Soda (A) and Best Soda (B) are two competing manufacturers of soda. Each manufacturer $i \in \{A, B\}$ can produce a certain amount of soda $q_i \ge 0$. The firms have a unit cost for producing soda $c_A, c_B > 0$. The price of soda is a decreasing function of the total amount of soda produced:
+\[
+    p(q_A, q_B) = \max\{0, \alpha - (q_A + q_B)\},
+\]
+where $\alpha > 0$. The utility of a firm is the amount of soda it produces times the profit it makes, i.e.,
+\[
+    u_A(q_A, q_B) = q_A \times \bigl(p(q_A, q_B) - c_A\bigr),
+\]
+\[
+    u_B(q_A, q_B) = q_B \times \bigl(p(q_A, q_B) - c_B\bigr).
+\]
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{(15 points)} What is the Nash equilibrium of this game? You should find a pair of quantities $q_A$ and $q_B$ so that no manufacturer wants to change the amount of soda it produces.
+
+    \item \textbf{(15 points)} Suppose next that manufacturer A has different possible production costs: low $c_L$ or high $c_H$, where $0 < c_L < c_H$. Manufacturer A knows their costs, but manufacturer B does not. Manufacturer B does, however, believe that the manufacturing cost for A is $c_L$ with probability $p$. What is the resulting Bayes-Nash equilibrium?
+\end{enumerate}
+
+\textbf{Solution:}
+
+\textbf{a)}
+
+Assume $p \ge 0$
+\[
+p(q_A,q_B)=\alpha-q_A-q_B
+\]
+
+The payoffs are
+\[
+u_A(q_A,q_B)=q_A(\alpha-q_A-q_B-c_A)
+\]
+\[
+u_B(q_A,q_B)=q_B(\alpha-q_A-q_B-c_B)
+\]
+ \(A\)'s best response is
+\[
+q_A=\frac{\alpha-c_A-q_B}{2}
+\]
+\(B\)'s best response is
+\[
+q_B=\frac{\alpha-c_B-q_A}{2}
+\]
+Thus,
+\[
+2q_A+q_B=\alpha-c_A,
+\]
+\[
+q_A+2q_B=\alpha-c_B.
+\]
+Then,
+\[
+q_A^*=\frac{\alpha-2c_A+c_B}{3}
+\]
+\[
+q_B^*=\frac{\alpha-2c_B+c_A}{3}.
+\]
+
+\textbf{b)}
+
+We have
+
+\[
+c_A=
+\begin{cases}
+c_L, & \text{with probability } p,\\
+c_H, & \text{with probability } 1-p,
+\end{cases}
+\qquad 0<c_L<c_H.
+\]
+
+Let \(q_L\) be \(A\)'s output when \(c_A=c_L\), and let \(q_H\) be the output when \(c_A=c_H\).
+
+\(A\)'s best responses are
+\[
+q_L=\frac{\alpha-c_L-q_B}{2},
+\]
+\[
+q_H=\frac{\alpha-c_H-q_B}{2}.
+\]
+\(B\)'s best response is
+\[
+q_B=\frac{\alpha-c_B-pq_L-(1-p)q_H}{2}.
+\]
+Let
+\[
+\bar c_A=pc_L+(1-p)c_H.
+\]
+
+Then the Bayes-Nash equilibrium is
+
+\[
+q_B^*=\frac{\alpha-2c_B+\bar c_A}{3}
+\]
+
+\[
+q_L^*
+=
+\frac{2\alpha+2c_B-\bar c_A-3c_L}{6}
+\]
+
+\[
+q_H^*
+=
+\frac{2\alpha+2c_B-\bar c_A-3c_H}{6}.
+\]
+
+\newpage
+
+\item \textbf{(35 points)} Two bears encounter each other in the forest. Each bear can choose to be either passive (P) or aggressive (A).
+
+\begin{itemize}
+    \item If both bears choose to be aggressive, they fight, in which case the stronger bear wins. The winner gets a utility of $3$, and the loser gets a utility of $-2$.
+    \item If both bears choose to be passive, they both leave and get a utility of $0$.
+    \item If one bear chooses to be aggressive and the other chooses to be passive, the aggressive bear gets a utility of $4$, and the passive bear gets a utility of $-1$.
+\end{itemize}
+
+Intuitively, it's better to get the other bear to simply retreat without a fight, but if the other bear refuses to retreat, then being aggressive is only a good idea if one believes they are likely to win the fight.
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{(15 points)} Suppose that Bear 1 chooses their strategy first.\footnote{Bears show aggression by slapping the ground, blowing air forcefully through their nose or mouth, or by snapping their teeth together. Source: \url{https://www.nps.gov/articles/bearattacks.htm}} Bear 2 observes this. In addition, the fact that Bear 1 is stronger than Bear 2 is common knowledge. Write this as an extensive form game; what is the subgame-perfect Nash equilibrium?
+
+    \item \textbf{(20 points)} Suppose that both bears can be of type weak (W) or strong (S). If both bears are of the same type, then a fight between them results in a draw, and both are weakened, which results in both getting a utility of $-1$. If one is strong and one is weak, then the strong bear always wins. Each bear is of type W or S with probability $\frac{1}{2}$. Each bear knows their own type, but not the other bear's type. Bear 1 chooses their action first. Bear 2 observes Bear 1's action and then chooses their own. Model this scenario as an extensive form game with imperfect information. What is the resulting Bayes-Nash equilibrium?
+\end{enumerate}
+
+\end{enumerate}
+
+\textbf{Solution:}
+
+\textbf{a)}
+
+Payoff matrix:
+\[
+\begin{array}{c|cc}
+ & P_2 & A_2\\
+\hline
+P_1 & (0,0) & (-1,4)\\
+A_1 & (4,-1) & (3,-2)
+\end{array}
+\]
+
+1). If Bear 1 chooses \(A\), then Bear 2 compares
+\[
+P: -1 \qquad
+A: -2
+\]
+
+Thus, Bear 2 chooses \(P\).\\
+
+2). If Bear 1 chooses \(P\), then Bear 2 compares
+\[
+P: 0 \qquad 
+A: 4
+\]
+
+Thus, Bear 2 chooses \(A\).\\
+
+So Bear 2's strategy is
+\[
+s_2(A)=P
+\]
+\[
+s_2(P)=A
+\]
+
+Now Bear 1 knows Bear 2 strategy.\\
+
+If Bear 1 chooses \(A\), Bear 2 chooses \(P\), so Bear 1 gets 4.
+
+If Bear 1 chooses \(P\), Bear 2 chooses \(A\), so Bear 1 gets -1.\\
+
+Since
+\[
+4>-1
+\]
+
+Bear 1 chooses \(A\).
+
+Therefore, the subgame-perfect Nash equilibrium is
+\[
+s_1=A,\qquad s_2(A)=P,\qquad s_2(P)=A
+\]
+\[
+(A,P), \text{ payoff: } (4, -1)
+\]
+
+\textbf{b)}
+
+Let
+\[
+W=\text{weak},\qquad S=\text{strong}
+\]
+
+Bear 1's strategy is
+\[
+s_1:\{W,S\}\to\{P,A\}
+\]
+
+Bear 2's strategy is
+\[
+s_2:\{W,S\}\times\{P,A\}\to\{P,A\}
+\]
+
+Assume Bear 1's strategy is:
+\[
+s_1(W)=A,\qquad s_1(S)=A
+\]
+
+If Bear 2 is strong and observes \(A\), payoff
+\[
+\frac12(3)+\frac12(-1)=1
+\]
+
+while choosing \(P\) gives payoff \(-1\). Thus,
+\[
+s_2(S,A)=A
+\]
+
+If Bear 2 is weak and observes \(A\), payoff
+\[
+\frac12(-1)+\frac12(-2)=-\frac32
+\]
+
+while choosing \(P\) gives payoff \(-1\). Thus,
+\[
+s_2(W,A)=P
+\]
+
+Now check Bear 1
+
+If Bear 1 is strong and chooses \(A\), its expected payoff is
+\[
+\frac12(4)+\frac12(-1)=\frac32
+\]
+
+If it drives to \(P\), Bear 2 chooses \(A\), so Bear 1 gets \(-1\). Since
+\[
+\frac32>-1
+\]
+
+If Bear 1 is weak and chooses \(A\), its expected payoff is
+\[
+\frac12(4)+\frac12(-2)=1
+\]
+
+If it drives to \(P\), Bear 2 chooses \(A\), so Bear 1 gets \(-1\). Since
+\[
+1>-1
+\]
+
+Therefore, the Bayes-Nash equilibrium is
+\[
+s_1(W)=A,\qquad s_1(S)=A
+\]
+\[
+s_2(W,A)=P,\qquad s_2(S,A)=A
+\]
+\[
+s_2(W,P)=A,\qquad s_2(S,P)=A
+\]
+\end{document}
