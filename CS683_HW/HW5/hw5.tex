@@ -1,0 +1,522 @@
+\documentclass[10pt,a4paper]{exam}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{enumerate}
+\usepackage{booktabs}
+\usepackage[a4paper,left=1in,top=1in,bottom=1in,right=1in,includeheadfoot]{geometry}
+\usepackage{times}
+\usepackage{xspace}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+
+\rfoot{\thepage}
+
+\newcommand{\KB}{\mathit{KB}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\AICourse}{\mathtt{AI\_Course}}
+\newcommand{\AITopic}{\mathtt{AI\_Topic}}
+\newcommand{\Teaches}{\mathtt{Teaches}}
+\newcommand{\Takes}{\mathtt{Takes}}
+\newcommand{\Smart}{\mathtt{Smart}}
+\newcommand{\Yvonne}{\texttt{Yvonne}}
+\newcommand{\IntroAI}{\texttt{COMPSCI683}}
+\newcommand{\Inf}{\mathtt{Inf}}
+\newenvironment{hint}{\paragraph{Hint:}}{\par}
+
+\begin{document}
+
+\begin{center}
+    {\Large \textbf{Homework 5}}\\[0.5em]
+    {\large Regret Minimization and Intro to Logic}
+\end{center}
+
+\begin{questions}
+
+\question[30]
+Given the following logical statements, use truth-table enumeration to show that $\KB \models \alpha$. In other words, write down all possible true/false assignments to the variables, the ones for which $\KB$ is true and the one for which $\alpha$ is true, and see whether one is a subset of the other.
+\begin{parts}
+    \part[15]
+    \begin{align*}
+    \KB ={} & (x_1 \vee x_2) \wedge (x_1 \Rightarrow x_3) \wedge \neg x_2\\
+    \alpha ={} & x_3 \vee x_2
+    \end{align*}
+
+    \part[15]
+    \begin{align*}
+    \KB ={} & (x_1 \vee x_3) \wedge (x_1 \Rightarrow \neg x_2) \\
+    \alpha ={} & \neg x_2
+    \end{align*}
+\end{parts}
+
+\textbf{Solution:}
+
+\textbf{a)}
+
+Truth table:
+
+\[
+\begin{array}{c|c|c|c|c|c|c|c}
+x_1 & x_2 & x_3 & x_1\lor x_2 & x_1\Rightarrow x_3 & \neg x_2 & KB & \alpha=x_3\lor x_2 \\
+\hline
+T & T & T & T & T & F & F & T \\
+T & T & F & T & F & F & F & T \\
+T & F & T & T & T & T & T & T \\
+T & F & F & T & F & T & F & F \\
+F & T & T & T & T & F & F & T \\
+F & T & F & T & T & F & F & T \\
+F & F & T & F & T & T & F & T \\
+F & F & F & F & T & T & F & F
+\end{array}
+\]
+
+\[
+M(KB)=\{(x_1,x_2,x_3)=(T,F,T)\}
+\]
+\[
+(T,F,T)\in M(\alpha)
+\]
+\[
+M(KB)\subseteq M(\alpha)
+\]
+\[
+KB\models \alpha
+\]
+
+\textbf{b)}
+
+Truth table:
+
+\[
+\begin{array}{c|c|c|c|c|c|c}
+x_1 & x_2 & x_3 & x_1\lor x_3 & x_1\Rightarrow \neg x_2 & KB & \alpha=\neg x_2 \\
+\hline
+T & T & T & T & F & F & F \\
+T & T & F & T & F & F & F \\
+T & F & T & T & T & T & T \\
+T & F & F & T & T & T & T \\
+F & T & T & T & T & T & F \\
+F & T & F & F & T & F & F \\
+F & F & T & T & T & T & T \\
+F & F & F & F & T & F & T
+\end{array}
+\]
+
+\[
+M(KB)=\{(T,F,T),(T,F,F),(F,T,T),(F,F,T)\}
+\]
+\[
+M(\alpha)=\{(T,F,T),(T,F,F),(F,F,T),(F,F,F)\}
+\]
+However,
+\[
+(F,T,T)\in M(KB) \quad \text{and} \quad (F,T,T)\notin M(\alpha)
+\]
+
+Therefore,
+\[
+M(KB)\nsubseteq M(\alpha)
+\]
+\[
+KB\not\models \alpha
+\]
+
+\newpage
+
+\question[15]
+We have proven the following bound on the regret of the multiplicative weights update algorithm:
+\begin{align*}
+    R_{\texttt{MWU}}(T) \le \frac{\log n}{\eps T}+\eps.
+\end{align*}
+Suppose that we know $T$ in advance, and that $T > \log n$.
+Derive the value of $\eps\in [0,1]$ that minimizes the regret. What is the regret bound obtained under this value of $\eps$?
+
+\textbf{Solution:}
+
+\textbf{a)}
+
+Let
+\[
+f(\epsilon)=\frac{\log n}{\epsilon T}+\epsilon.
+\]
+Take derivative:
+\[
+f'(\epsilon)
+=
+-\frac{\log n}{T\epsilon^2}+1
+\]
+
+Take
+\[
+f'(\epsilon)=0.
+\]
+\[
+-\frac{\log n}{T\epsilon^2}+1=0
+\]
+\[
+1=\frac{\log n}{T\epsilon^2}
+\]
+\[
+\epsilon^2=\frac{\log n}{T}
+\]
+
+Thus
+\[
+\epsilon^*=\sqrt{\frac{\log n}{T}}
+\]
+Because we have
+\[
+T>\log n
+\]
+\[
+0<\frac{\log n}{T}<1
+\]
+so
+\[
+\epsilon^*=\sqrt{\frac{\log n}{T}}\in[0,1].
+\]
+
+Let we check second derivative.
+
+\[
+f''(\epsilon)=\frac{2\log n}{T\epsilon^3}>0,
+\]
+
+$\epsilon^*$ minimizes the regret.
+
+\textbf{b)}
+
+Regret bound:
+\[
+R_{\mathrm{MWU}}(T)
+\leq
+\frac{\log n}{T\sqrt{\frac{\log n}{T}}}
++
+\sqrt{\frac{\log n}{T}}.
+\]
+\[
+\frac{\log n}{T\sqrt{\frac{\log n}{T}}}
+=
+\sqrt{\frac{\log n}{T}}.
+\]
+\[
+R_{\mathrm{MWU}}(T)
+\leq
+\sqrt{\frac{\log n}{T}}
++
+\sqrt{\frac{\log n}{T}}
+=
+2\sqrt{\frac{\log n}{T}}.
+\]
+
+\newpage
+
+\question[25]
+Here are two sentences in the language of first-order logic:
+\begin{enumerate}[(1)]
+    \item $\forall x : \exists y : (x \geq y)$
+    \item $\exists y : \forall x : (x \geq y)$
+\end{enumerate}
+
+\begin{parts}
+    \part[7] Assume that the variables range over all the natural numbers $0,1,2,\ldots$ and that the ``$\geq$'' predicate means ``is greater than or equal to''. Under this interpretation, translate (a) and (b) into English.
+
+    \part[8] Is (1) true under this interpretation? Is (2) true under this interpretation?
+
+    \part[10] Does (1) logically entail (2)? Does (2) logically entail (1)? Justify your answers.
+\end{parts}
+
+\textbf{Solution:}
+
+\textbf{(a)}
+\begin{itemize}
+    \item 1) For every natural number x, there exists a natural number y such that x is greater than or equal to y.
+    \item 2) There exists a natural number y such that every natural number x is greater than or equal to y.
+\end{itemize}
+
+\textbf{(b)}
+
+\text{1)}
+
+True  
+
+For any natural number $x$, we can choose $y=x$. Then $x \ge x$ which is true.
+
+\text{2)}
+
+True
+
+Choose $y=0$, for every natural number $x$, $x \ge 0$ which is true.\\
+
+\textbf{(c)}
+
+Let's take
+\[
+A := \forall x \exists y \, (x \ge y)
+\]
+\[
+B := \exists y \forall x \, (x \ge y)
+\]
+
+(1) First,
+\[
+A \not\models B.
+\]
+
+CountExample:
+\[
+R = \{(a,a),(b,b)\}.
+\]
+Then
+\[
+\forall x \exists y \, R(x,y)
+\]
+is true, since each element euqals itself. However,
+\[
+\exists y \forall x \, R(x,y)
+\]
+is false, since no relationship between \(y\) and \(x\). Therefore,
+\[
+A \not\models B.
+\]
+
+(2) Second,
+\[
+B \models A.
+\]
+
+If
+\[
+\exists y \forall x \, (x \ge y)
+\]
+is true, then there is a fixed \(y = 0\):
+\[
+x \ge y.
+\]
+Thus, for every \(x\), there exists a \(y = 0\) such that
+\[
+x \ge y.
+\]
+Therefore,
+\[
+\exists y \forall x \, (x \ge y)
+\models
+\forall x \exists y \, (x \ge y).
+\]
+
+\newpage
+
+\question[30]
+Two English sentences ``Anyone who takes an AI course is smart'' and ``Any course that teaches an AI topic is an AI course'' have been represented in first-order logic:
+\[
+\forall x : (\exists y : \AICourse(y) \wedge \Takes(x, y)) \Rightarrow \Smart(x)
+\]
+\[
+\forall x : (\exists y : \AITopic(y) \wedge \Teaches(x, y)) \Rightarrow \AICourse(x)
+\]
+
+\begin{parts}
+    \part[10] It is known that Yvonne takes COMPSCI 683 and COMPSCI 683 teaches Inference, which is an AI topic. Represent these facts as first-order logic sentences.
+
+    \part[10] Next, convert all first-order logic sentences into conjunctive normal form.
+
+    \part[10] Use resolution to prove the statement ``Yvonne is smart.''
+\end{parts}
+
+Use the following table format to represent the steps you take. Here, sentences 1 and 2 are the ones you are resolving. $\theta = $ is the substitutions you are making to unify them, if any. The resolvent is the sentence that results from resolving the two sentences you picked. For brevity, you can use the number of the sentence instead of copying verbatim.
+
+\begin{center}
+\begin{tabular}{lcccc}
+    \toprule
+    Step \# & Sentence 1 & Sentence 2 & Resolvent & $\theta =$\\
+    \midrule
+     & & & & \\
+     & & & & \\
+    \bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Solution:}
+
+\textbf{(a)}
+
+Represent these facts as first-order logic sentences.
+\[
+Takes(Yvonne, COMPSCI683)
+\]
+\[
+Teaches(COMPSCI683, Inference)
+\]
+\[
+AI\_Topic(Inference)
+\]
+
+\textbf{(b)}
+\[
+\forall x : \left( \exists y : AI\_Course(y) \wedge Takes(x,y) \right)
+\Rightarrow Smart(x)
+\]
+\[
+\forall x : \left( \exists y : AI\_Topic(y) \wedge Teaches(x,y) \right)
+\Rightarrow AI\_Course(x)
+\]
+
+Convert them into CNF.
+
+For the first rule:
+\[
+\neg AI\_Course(y) \vee \neg Takes(x,y) \vee Smart(x)
+\]
+For the second rule:
+\[
+\neg AI\_Topic(y) \vee \neg Teaches(x,y) \vee AI\_Course(x)
+\]
+Thus the CNF clauses are:
+\[
+1.\quad \neg AI\_Course(y) \vee \neg Takes(x,y) \vee Smart(x)
+\]
+\[
+2.\quad \neg AI\_Topic(y) \vee \neg Teaches(x,y) \vee AI\_Course(x)
+\]
+\[
+3.\quad Takes(Yvonne, COMPSCI683)
+\]
+\[
+4.\quad Teaches(COMPSCI683, Inference)
+\]
+\[
+5.\quad AI\_Topic(Inference)
+\]
+\[
+6.\quad \neg Smart(Yvonne)
+\]
+
+\textbf{(c)}
+
+\[
+\begin{array}{c|c|c|c|c}
+\text{Step \#} & \text{Sentence 1} & \text{Sentence 2} & \text{Resolvent} & \theta \\ \hline
+1 & 2 & 5 
+& \neg Teaches(x,Inference) \vee AI\_Course(x)
+& \{y\leftarrow Inference\} \\
+
+2 & \text{Step 1} & 4
+& AI\_Course(COMPSCI683)
+& \{x\leftarrow COMPSCI683\} \\
+
+3 & 1 & 3
+& \neg AI\_Course(COMPSCI683) \vee Smart(Yvonne)
+& \{x\leftarrow Yvonne,\ y\leftarrow COMPSCI683\} \\
+
+4 & \text{Step 3} & \text{Step 2}
+& Smart(Yvonne)
+& \{\} \\
+
+5 & \text{Step 4} & 6
+& \Box
+& \{\}
+\end{array}
+\]
+
+* In step 3, $y \leftarrow COMPSCI683$
+
+We finial get empty clause
+\[
+\Box
+\]
+
+Therefore,
+\[
+KB \models Smart(Yvonne).
+\]
+\[
+Yvonne \text{ is smart.}
+\]
+
+
+
+
+
+\newpage
+
+\question[Bonus]
+In what follows, we will prove that 3-CNF formulas with a small number of clauses will always have a satisfying assignment. Recall that a 3-CNF formula $\phi$ comprises clauses of 3 literals each. For example,
+\begin{align*}
+    \phi(\vec x) ={} & (x_1\vee \neg x_2 \vee \neg x_3) \wedge (x_2 \vee \neg x_3 \vee\neg x_5) \\
+    & \wedge (x_2\vee x_4\vee \neg x_5) \wedge (x_1 \vee \neg x_4 \vee x_5)
+\end{align*}
+is a 3-CNF formula with four clauses of size 3 each. We assume that each clause has exactly three different variables in it. For example, we will not have clauses of the form $(x_2 \vee x_2 \vee x_3)$ or $(x_7\vee \neg x_8 \vee \neg x_7)$.
+Suppose that we choose the truth value of each variable i.i.d. uniformly at random. In other words, we set
+\[
+x_i = \begin{cases}
+    \mathit{True} & \text{with probability } \frac12,\\
+    \mathit{False} & \text{otherwise.}
+\end{cases}
+\]
+We call this a uniform random assignment of variables.
+
+\begin{parts}
+    \part[Bonus] Consider a 3-CNF formula with $m$ clauses and $n$ variables. What is the probability that a clause $C$ in $\phi$ is satisfied under the uniform random assignment?
+
+    \part[Bonus] What is the expected number of satisfied clauses under the uniform random assignment? Does this number depend on the number of variables? Does it depend on the number of clauses?
+
+    \part[Bonus] Let $\phi$ be an $m$-clause 3-CNF formula with distinct variables in each clause. Conclude from (b) that if $m<8$ then there is at least one satisfying assignment for $\phi$.
+    \begin{hint}
+        Recall that if a random variable $X$ has $\E[X] = \mu$, there exists at least one realization in the domain of $X$ whose value is at least $\mu$.
+    \end{hint}
+
+    \part[Bonus] Let $\mu(\phi)$ be the expected number of satisfied clauses you derived in (b). Show that the probability that a randomly chosen variable assignment satisfies at least $\mu(\phi)$ clauses is at least $\frac{1}{8m}$.
+\end{parts}
+
+\end{questions}
+
+\textbf{Solution:}
+
+\textbf{(a)}
+\[
+\Pr[C \text{ is satisfied}] = 1 - (\frac{1}{2})^3 = 1 - \frac{1}{8} = \frac{7}{8}.
+\]
+
+\textbf{(b)}
+
+Let \(C_j\) be the \(j\)-th clause, and define $I_j$
+
+\[
+I_j =
+\begin{cases}
+1 & \text{if } C_j \text{ is satisfied},\\
+0 & \text{otherwise}.
+\end{cases}
+\]
+
+Then
+
+\[
+X=\sum_{j=1}^m I_j
+\]
+
+is the number of satisfied clauses. From part (a),
+
+\[
+\mathbb{E}[I_j]=\Pr(C_j \text{ is satisfied})=\frac{7}{8}.
+\]
+\[
+\mathbb{E}[X]
+=
+\mathbb{E}\left[\sum_{j=1}^m I_j\right]
+=
+\sum_{j=1}^m \mathbb{E}[I_j]
+=
+\sum_{j=1}^m \frac{7}{8}
+=
+\frac{7m}{8}.
+\]
+
+It does not depend on the number of variables, but it does depend on the number of clauses.
+\textbf{(c)}
+
+
+
+
+\end{document}

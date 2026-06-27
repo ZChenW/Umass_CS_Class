@@ -6,3 +6,7 @@
 - CS485
 - CS589
 - Math534H
+
+## Summer 2026
+
+- CS683
